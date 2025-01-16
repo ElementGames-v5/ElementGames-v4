@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Game Page</title>
+    <link rel="icon" type="image/x-icon" href="/ElementGames-v4/media/favicon.png">
+    <link rel="stylesheet" href="style.css">
+
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-299D309YZK"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag() { dataLayer.push(arguments); }
+        gtag('js', new Date());
+        gtag('config', 'G-299D309YZK');
+    </script>
+
+    <!-- Google AdSense -->
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4811797647559113"
+        crossorigin="anonymous"></script>
+</head>
+
+<body>
+    <!-- Navbar -->
+    <div id="navbar"></div>
+
+    <!-- Main content -->
+    <div class="main-content" id="main-content">
+        <header>
+            <h1>Game Title</h1>
+            <div id="clock"></div>
+        </header>
+
+        <!-- Container for iframe and ad -->
+        <section id="game-ad-container">
+            <div id="game-container-adsns">
+                <iframe id="game-iframe" src="/ElementGames-v4/game-source/tuts-platformer.html"
+                    style="border: 4px solid #999999; border-bottom: 0px solid rgba(153, 153, 153, 0);" width="720"
+                    height="480" allowfullscreen></iframe>
+                <div id="frameTools" style="width: 720px; height: 45px; display: flex; align-items: center;">
+                    <button id="fullscreen-button"
+                        style="background: none; border: none; padding: 0; display: flex; align-items: center;">
+                        <img src="/ElementGames-v4/media/fullscreen.png" alt="Fullscreen"
+                            style="width: 32px; height: 32px; margin-left: 5px;">
+                    </button>
+                    <button id="reload-button"
+                        style="background: none; border: none; padding: 0; display: flex; align-items: center; margin-left: 5px;">
+                        <img src="/ElementGames-v4/media/reload.png" alt="Reload" style="width: 32px; height: 32px;">
+                    </button>
+                    <a href="javascript:void(0);" onclick="openFullscreenWindow()">
+                        <button
+                            style="background: none; border: none; padding: 0; display: flex; align-items: center; margin-left: 5px;">
+                            <img src="/ElementGames-v4/media/alert.svg" alt="Reload" style="width: 32px; height: 32px;">
+                        </button>
+                    </a>
+                </div>
+                <div id="game-description">
+                    <p>Game description goes here. Provide details about the game, how to play, etc.</p>
+                </div>
+                <div id="copyright">
+                    <p>&copy;2024 Element Games. All rights reserved I think.</p>
+                </div>
+            </div>
+
+            <!-- Ad Section -->
+            <div id="ad-container">
+                <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4811797647559113"
+                    crossorigin="anonymous"></script>
+                <!-- Right Banner -->
+                <ins class="adsbygoogle"
+                    style="display:block"
+                    data-ad-client="ca-pub-4811797647559113"
+                    data-ad-slot="8770536991"
+                    data-ad-format="auto"
+                    data-full-width-responsive="true"></ins>
+                <script>
+                    (adsbygoogle = window.adsbygoogle || []).push({});
+                </script>
+            </div>
+        </section>
+    </div>
+
+    <script>
+        // JavaScript for Navbar Toggle
+        function toggleNavbar() {
+            var navbar = document.getElementById("navbar");
+            var mainContent = document.getElementById("main-content");
+            if (navbar.style.left === "0px") {
+                navbar.style.left = "-250px";
+                mainContent.style.marginLeft = "0";
+            } else {
+                navbar.style.left = "0px";
+                mainContent.style.marginLeft = "250px";
+            }
+        }
+
+        // JavaScript for Clock
+        function updateClock() {
+            const now = new Date();
+            const hours24 = now.getHours();
+            const minutes = String(now.getMinutes()).padStart(2, '0');
+            const seconds = String(now.getSeconds()).padStart(2, '0');
+            const period = hours24 >= 12 ? 'PM' : 'AM';
+            const hours12 = hours24 % 12 || 12;
+            document.getElementById('clock').textContent = `${String(hours12).padStart(2, '0')}:${minutes}:${seconds} ${period}`;
+        }
+        setInterval(updateClock, 1000);
+
+        window.onload = function () {
+            document.getElementById("navbar").style.left = "0px";
+        }
+
+        // JavaScript for Fullscreen Button
+        document.getElementById('fullscreen-button').addEventListener('click', function () {
+            var iframe = document.getElementById('game-iframe');
+            if (iframe.requestFullscreen) {
+                iframe.requestFullscreen();
+            } else if (iframe.mozRequestFullScreen) {
+                iframe.mozRequestFullScreen();
+            } else if (iframe.webkitRequestFullscreen) {
+                iframe.webkitRequestFullscreen();
+            } else if (iframe.msRequestFullscreen) {
+                iframe.msRequestFullscreen();
+            }
+        });
+
+        // JavaScript for Reload Button
+        document.getElementById('reload-button').addEventListener('click', function () {
+            var iframe = document.getElementById('game-iframe');
+            iframe.src = iframe.src; 
+        });
+    </script>
+
+    <script src="/ElementGames-v4/navbar.js" type="module"></script>
+</body>
+
+</html>

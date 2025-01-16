@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Leaderboard</title>
+    <style>
+        body {
+            background-color: #14141900;
+            color: #f0f0f0;
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .leaderboard {
+            width: 80%;
+            max-width: 600px;
+            background-color: #1e1e23;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+            overflow-y: auto;
+            max-height: 500px;
+        }
+
+        h1 {
+            text-align: center;
+            margin-top: 0;
+            color: #ffcc00;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th,
+        td {
+            padding: 10px;
+            text-align: left;
+            border-bottom: 1px solid #333;
+        }
+
+        th {
+            background-color: #28282c;
+            color: #fff;
+        }
+
+        .rank {
+            width: 10%;
+            text-align: center;
+        }
+
+        .username {
+            width: 60%;
+        }
+
+        .score {
+            width: 30%;
+            text-align: right;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="leaderboard">
+        <h1>Leaderboard</h1>
+        <table>
+            <thead>
+                <tr>
+                    <th class="rank">Rank</th>
+                    <th class="username">Username</th>
+                    <th class="score">Score</th>
+                </tr>
+            </thead>
+            <tbody id="leaderboardEntries"></tbody>
+        </table>
+    </div>
+
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
+    <script>
+        const firebaseConfig = {
+        apiKey: "AIzaSyCrNMzKkmWCl0yfP_mLO9nhn1p1n7DMbfk",
+        authDomain: "elementgames-v4.firebaseapp.com",
+        projectId: "elementgames-v4",
+        storageBucket: "elementgames-v4.appspot.com",
+        messagingSenderId: "604113750396",
+        appId: "1:604113750396:web:8343b59f3b2a7e893efcf9",
+        measurementId: "G-CV6TY6NJBR"
+    };
+
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
+
+        function parseScore(scoreStr) {
+            try {
+                const scoreObj = JSON.parse(scoreStr);
+                if (scoreObj && typeof scoreObj === 'object' && scoreObj.hasOwnProperty('score')) {
+                    return scoreObj.score;
+                } else {
+                    console.error("Invalid score object format. Missing 'score' property.");
+                    return null;
+                }
+            } catch (error) {
+                console.error("Error parsing score string:", error);
+                return null;
+            }
+        }
+
+        async function fetchLeaderboard() {
+            const leaderboardEntries = document.getElementById('leaderboardEntries');
+            const snapshot = await db.collection("driftBoss").get();
+
+            let scores = [];
+            snapshot.forEach(doc => {
+                const data = doc.data();
+                const scoreStr = data.save;
+                let scoreValue = parseScore(scoreStr);
+
+                if (scoreValue !== null) {
+                    scoreValue = Math.round(scoreValue);
+                } else {
+                    scoreValue = -Infinity;
+                }
+
+                scores.push({
+                    username: doc.id,
+                    score: scoreValue
+                });
+            });
+
+            scores.sort((a, b) => b.score - a.score);
+
+            leaderboardEntries.innerHTML = '';
+            scores.forEach((entry, index) => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td class="rank">${index + 1}.</td>
+                    <td class="username">${entry.username}</td>
+                    <td class="score">${entry.score}</td>
+                `;
+                leaderboardEntries.appendChild(row);
+            });
+        }
+
+        window.onload = fetchLeaderboard;
+    </script>
+</body>
+
+</html>

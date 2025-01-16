@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cookie Clicker</title>
+  <link rel="icon" type="image/x-icon" href="/ElementGames-v4/media/favicon.png">
+  <link rel="stylesheet" href="style.css">
+
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-299D309YZK"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag() { dataLayer.push(arguments); }
+    gtag('js', new Date());
+
+    gtag('config', 'G-299D309YZK');
+  </script>
+</head>
+
+<body>
+  <!-- Navbar -->
+  <div id="navbar"></div>
+
+  <script type="module">
+    import { getAuth, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/10.12.4/firebase-auth.js';
+    import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.4/firebase-app.js';
+    import { getFirestore, doc, getDoc, setDoc, updateDoc } from 'https://www.gstatic.com/firebasejs/10.12.4/firebase-firestore.js';
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyCrNMzKkmWCl0yfP_mLO9nhn1p1n7DMbfk",
+      authDomain: "elementgames-v4.firebaseapp.com",
+      projectId: "elementgames-v4",
+      storageBucket: "elementgames-v4.appspot.com",
+      messagingSenderId: "604113750396",
+      appId: "1:604113750396:web:8343b59f3b2a7e893efcf9",
+      measurementId: "G-CV6TY6NJBR"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+
+    async function GetUsername() {
+      return new Promise((resolve, reject) => {
+        onAuthStateChanged(auth, async (user) => {
+          if (user) {
+            try {
+              const userDoc = doc(db, "users", user.uid);
+              const docSnap = await getDoc(userDoc);
+
+              if (docSnap.exists()) {
+                const userData = docSnap.data();
+                resolve(userData.username);
+              } else {
+                console.log('No user document found.');
+                resolve(null);
+              }
+            } catch (error) {
+              console.error('Error getting user document:', error);
+              reject('Error retrieving user data.');
+            }
+          } else {
+            // Redirect to login if no user is logged in
+            window.location.href = 'login.html';
+            resolve(null);
+          }
+        });
+      });
+    }
+
+    function saveUsername(username) {
+      localStorage.setItem("eg-username", username);
+    }
+
+    // Call GetUsername and save the result when the page loads
+    GetUsername().then(username => {
+      if (username) {
+        saveUsername(username);
+        console.log("Username saved to localStorage:", username);
+      } else {
+        console.log("No username to save.");
+      }
+    });
+
+    // Function to check for an existing game save or create a new one
+    async function initializeGame() {
+      localStorage.setItem('CookieClickerGame', "undefined");
+      localStorage.setItem('CookieClickerLang', "EN");
+      const gameData = localStorage.getItem('CookieClickerGame');
+
+      if (gameData) {
+        console.log("Existing game save found.");
+        const usernameLD = localStorage.getItem('eg-username');
+
+        // Fetch save data
+        async function GetSaveData() {
+          return new Promise((resolve, reject) => {
+            onAuthStateChanged(auth, async (user) => {
+              if (user) {
+                try {
+                  const saveDoc = doc(db, "cookieClicker", usernameLD);
+                  const docSnap = await getDoc(saveDoc);
+
+                  if (docSnap.exists()) {
+                    const userData = docSnap.data();
+                    resolve(userData.save);
+                  } else {
+                    console.log('No save document found in Firestore.');
+                    resolve(null);
+                  }
+                } catch (error) {
+                  console.error('Error getting save document:', error);
+                  reject('Error retrieving save data.');
+                }
+              } else {
+                window.location.href = 'login.html';
+                resolve(null);
+              }
+            });
+          });
+        }
+
+        const retrievedGameSave = await GetSaveData();
+        localStorage.setItem('CookieClickerGame', retrievedGameSave || "undefined");
+        console.log("Initialized game save data.");
+        alert("Found existing save data for current user. If save data is corrupted or incorect, report it (feedback) and send the ammount of cookies you had previously.");
+      }
+
+      // Function to save game data to Firestore
+      async function saveGameDataToFirestore() {
+        const cookieClickerData = localStorage.getItem('CookieClickerGame');
+        const usr = localStorage.getItem('eg-username');
+        const score = localStorage.getItem('cookieClickerScore');
+
+        try {
+          console.log('Saving game data...', cookieClickerData);
+          const cookieClickerDoc = doc(db, "cookieClicker", usr);
+          const docSnap = await getDoc(cookieClickerDoc);
+
+          if (docSnap.exists()) {
+            await updateDoc(cookieClickerDoc, { save: cookieClickerData, score: score });
+            console.log('Game data updated in Firestore.');
+          } else {
+            await setDoc(cookieClickerDoc, { save: cookieClickerData, score: score });
+            console.log('Game data saved to Firestore.');
+          }
+        } catch (error) {
+          console.error('Error saving game data:', error);
+        }
+      }
+
+      setInterval(async () => {
+        await saveGameDataToFirestore();
+      }, 30000);
+
+      // After all async operations in initializeGame are complete, load the iframe
+      document.getElementById('game-iframe').src = "/ElementGames-v4/game-source/cookie-clicker/index.html";
+    }
+
+    window.addEventListener('load', initializeGame);
+  </script>
+
+  <!-- Main content -->
+  <div class="main-content" id="main-content">
+    <header>
+      <h1>Cookie Clicker</h1>
+      <div id="clock"></div>
+      <br>
+      <div class="note" style="display: flex;
+            align-items: center;
+            justify-content: space-between; /* Ensure spacing between text and button */
+            background-color: #461e07;
+            border: 1px solid #333;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            padding: 30px;
+            flex-direction: column; /* Stack elements vertically */
+            text-align: center;">
+        <h3 style="margin: 0;">If your save data was deleted, please send me a feedback request stating how many cookies
+          you had, and if possible your save file. Sorry for the shitty code. (Please dont spam me with requests if
+          nothing acctually hapened to your cookies)</h3>
+        <button style="margin-top: 20px; padding: 10px 20px; border-radius: 5px; border: none; cursor: pointer;"
+          onclick="window.location.href='/ElementGames-v4/feedback.html'">
+          Send Request
+        </button>
+      </div>
+    </header>
+
+    <section id="game-container">
+      <iframe id="game-iframe" style="border: 4px solid #999999; border-bottom: 0px solid rgba(153, 153, 153, 0);"
+        width="720" height="480" allowfullscreen></iframe>
+      <div id="frameTools" style="width: 720px; height: 45px; display: flex; align-items: center;">
+        <button id="fullscreen-button"
+          style="background: none; border: none; padding: 0; display: flex; align-items: center;">
+          <img src="/ElementGames-v4/media/fullscreen.png" alt="Fullscreen"
+            style="width: 32px; height: 32px; margin-left: 5px;">
+        </button>
+        <button id="reload-button"
+          style="background: none; border: none; padding: 0; display: flex; align-items: center; margin-left: 5px;">
+          <img src="/ElementGames-v4/media/reload.png" alt="Reload" style="width: 32px; height: 32px;">
+        </button>
+        <a href="javascript:void(0);" onclick="openFullscreenWindow()">
+
+          <button
+            style="background: none; border: none; padding: 0; display: flex; align-items: center; margin-left: 5px;">
+            <img src="/ElementGames-v4/media/alert.svg" alt="Reload" style="width: 32px; height: 32px;">
+          </button>
+        </a>
+
+        <script>
+          function openFullscreenWindow() {
+            // Get the screen width and height
+            var screenWidth = window.screen.width;
+            var screenHeight = window.screen.height;
+
+            // Open a new window with screen dimensions
+            var newWindow = window.open('https://classroom.google.com', 'name', `width=${screenWidth},height=${screenHeight},scrollbars=yes`);
+
+            // Check if the new window is successfully opened
+            if (newWindow) {
+              // Request fullscreen mode (for browsers that support it)
+              newWindow.onload = function () {
+                if (newWindow.document.documentElement.requestFullscreen) {
+                  newWindow.document.documentElement.requestFullscreen();
+                } else if (newWindow.document.documentElement.mozRequestFullScreen) { // Firefox
+                  newWindow.document.documentElement.mozRequestFullScreen();
+                } else if (newWindow.document.documentElement.webkitRequestFullscreen) { // Chrome, Safari, and Opera
+                  newWindow.document.documentElement.webkitRequestFullscreen();
+                } else if (newWindow.document.documentElement.msRequestFullscreen) { // IE/Edge
+                  newWindow.document.documentElement.msRequestFullscreen();
+                }
+              };
+            }
+          }
+        </script>
+
+
+      </div>
+
+      <br>
+      <iframe src="/ElementGames-v4/other/cookieClicker-leaderboard.html"
+        style="width: 750px; height: 540px; border: none;"></iframe>
+
+      <div id="game-description">
+        <p>shut up jeremiah and just click the cookie</p>
+      </div>
+      <div id="copyright">
+        <p>&copy;2024 Element Games. All rights reserved I think.</p>
+      </div>
+    </section>
+  </div>
+
+  <script>
+    // JavaScript for Navbar Toggle
+    function toggleNavbar() {
+      var navbar = document.getElementById("navbar");
+      var mainContent = document.getElementById("main-content");
+      if (navbar.style.left === "0px") {
+        navbar.style.left = "-250px";
+        mainContent.style.marginLeft = "0";
+      } else {
+        navbar.style.left = "0px";
+        mainContent.style.marginLeft = "250px";
+      }
+    }
+
+    // JavaScript for Clock
+    function updateClock() {
+      const now = new Date();
+      const hours24 = now.getHours();
+      const minutes = String(now.getMinutes()).padStart(2, '0');
+      const seconds = String(now.getSeconds()).padStart(2, '0');
+      const period = hours24 >= 12 ? 'PM' : 'AM';
+      const hours12 = hours24 % 12 || 12; // Convert to 12-hour format
+      document.getElementById('clock').textContent = `${String(hours12).padStart(2, '0')}:${minutes}:${seconds} ${period}`;
+    }
+    setInterval(updateClock, 1000); // Update every second
+
+    // Ensure the navbar is correctly positioned on load
+    window.onload = function () {
+      document.getElementById("navbar").style.left = "0px";
+    }
+
+    // JavaScript for Fullscreen Button
+    document.getElementById('fullscreen-button').addEventListener('click', function () {
+      var iframe = document.getElementById('game-iframe');
+      if (iframe.requestFullscreen) {
+        iframe.requestFullscreen();
+      } else if (iframe.mozRequestFullScreen) { // Firefox
+        iframe.mozRequestFullScreen();
+      } else if (iframe.webkitRequestFullscreen) { // Chrome, Safari, and Opera
+        iframe.webkitRequestFullscreen();
+      } else if (iframe.msRequestFullscreen) { // IE/Edge
+        iframe.msRequestFullscreen();
+      }
+    });
+
+    // JavaScript for Reload Button
+    document.getElementById('reload-button').addEventListener('click', function () {
+      var iframe = document.getElementById('game-iframe');
+      iframe.src = iframe.src; // Reload the iframe
+    });
+  </script>
+
+  <div id="iframeContainer">
+    <iframe src="/ElementGames-v4/admin/client.html"
+      style="position: fixed; bottom: 0px; right: 0px; height: 40px; width: 300px; border: none; " title="hi"></iframe>
+
+    <script>
+      // Function to handle messages from the iframe
+      function handleMessage(event) {
+        if (event.origin !== window.location.origin) {
+          return; // Ignore messages from unknown origins
+        }
+
+        const message = event.data;
+
+        if (message.type === 'redirect') {
+          window.location.href = message.url;
+        }
+      }
+
+      // Add event listener for messages from the iframe
+      window.addEventListener('message', handleMessage, false);
+    </script>
+
+    <script src="/ElementGames-v4/navbar.js" type="module"></script>
+    <script src="/ElementGames-v4/authCheck.js" type="module"></script>
+</body>
+
+</html>

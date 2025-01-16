@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Feedback</title>
+    <link rel="icon" type="image/x-icon" href="/ElementGames-v4/media/favicon.png">
+    <link rel="stylesheet" href="style.css">
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-299D309YZK"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag() { dataLayer.push(arguments); }
+        gtag('js', new Date());
+        gtag('config', 'G-299D309YZK');
+    </script>
+</head>
+
+<body>
+    <!-- Navbar -->
+    <div id="navbar"></div>
+
+    <!-- Main content -->
+    <div class="main-content" id="main-content">
+        <header>
+            <h1>Element Games - Feedback</h1>
+        </header>
+
+        <!-- Dropdown to select feedback type -->
+        <div class="dropdown">
+            <br>
+            <label for="feedback-type" style="display: block; text-align: center;">Select Feedback Type:</label>
+            <br>
+            <select id="feedback-type" style="display: block; margin: 0 auto;">
+                <option value="">--Select an option--</option>
+                <option value="request-game">Request a Game</option>
+                <option value="report-bug">Report a Bug</option>
+            </select>
+        </div>
+
+        <!-- Request a Game Section -->
+        <div class="feedback-section" id="request-game-section" style="display: none;">
+            <h2>Request a Game</h2>
+            <label for="game-request">Enter the game you'd like to see:</label>
+            <input type="text" id="game-request" name="game-request" placeholder="Type your request here..." />
+            <br>
+            <br>
+            <button id="submit-request" class="submit-button">Submit</button>
+        </div>
+
+        <!-- Report Bug Section -->
+        <div class="feedback-section" id="report-bug-section" style="display: none;">
+            <h2>Report a Bug</h2>
+            <label for="bug-report">Describe the bug you encountered:</label>
+            <input type="text" id="bug-report" name="bug-report" placeholder="Describe the issue..." />
+            <br>
+            <br>
+            <button id="submit-request" class="submit-button">Submit</button>
+        </div>
+    </div>
+
+    <div id="iframeContainer">
+        <iframe src="/ElementGames-v4/admin/client.html"
+            style="position: fixed; bottom: 0px; right: 0px; height: 40px; width: 300px; border: none;" title="hi"></iframe>
+    </div>
+
+    <!-- JavaScript Section -->
+    <script>
+        // Handle dropdown selection
+        const feedbackType = document.getElementById('feedback-type');
+        const requestGameSection = document.getElementById('request-game-section');
+        const reportBugSection = document.getElementById('report-bug-section');
+    
+        feedbackType.addEventListener('change', function () {
+            const selectedValue = this.value;
+    
+            // Hide both sections by default
+            requestGameSection.style.display = 'none';
+            reportBugSection.style.display = 'none';
+    
+            // Show the section based on the selected option
+            if (selectedValue === 'request-game') {
+                requestGameSection.style.display = 'block';
+            } else if (selectedValue === 'report-bug') {
+                reportBugSection.style.display = 'block';
+            }
+        });
+    
+        // Handle form submission using GET request with query parameters
+        function submitFeedback(feedback, type) {
+            const baseUrl = 'https://trigger.macrodroid.com/0e6fbdac-cc83-41a2-abdb-2839cdf8b3f0/feedback';
+            
+            // Build query string
+            const url = `${baseUrl}?feedback=${encodeURIComponent(type)}: ${encodeURIComponent(feedback)}`;
+    
+            // Make GET request
+            fetch(url, {
+                method: 'GET',
+            })
+            .then(response => response.text()) // Retrieve the response as text
+            .then(data => {
+                if (data.trim().toLowerCase() === 'ok') { // Check if the response is "ok" or "OK"
+                    alert('Feedback submitted successfully!');
+                } else {
+                    alert('Unexpected response from the server: ' + data);
+                }
+            })
+            .catch((error) => {
+                console.error('Error:', error);
+                alert('Error submitting feedback');
+            });
+        }
+    
+        // Submit "Request a Game" form
+        document.getElementById('submit-request').addEventListener('click', function () {
+            const feedback = document.getElementById('game-request').value;
+            if (feedback.trim()) {
+                submitFeedback(feedback, 'Request a Game');
+            } else {
+                alert('Please enter a game request.');
+            }
+        });
+    
+        // Submit "Report a Bug" form
+        document.getElementById('submit-bug').addEventListener('click', function () {
+            const feedback = document.getElementById('bug-report').value;
+            if (feedback.trim()) {
+                submitFeedback(feedback, 'Report a Bug');
+            } else {
+                alert('Please describe the bug.');
+            }
+        });
+    </script>
+    
+
+    <script src="/ElementGames-v4/navbar.js" type="module"></script>
+    <script src="/ElementGames-v4/authCheck.js" type="module"></script>
+</body>
+
+</html>

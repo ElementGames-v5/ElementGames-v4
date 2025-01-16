@@ -1,0 +1,209 @@
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background-color: #141419;
+    color: #ffffff;
+}
+
+header {
+    text-align: center;
+    padding: 20px;
+    background-color: #141419;
+    border-bottom: 1px solid #333;
+}
+
+header h1 {
+    margin: 0;
+    font-size: 2em;
+}
+
+header p {
+    margin: 0;
+}
+
+.main-content {
+    padding: 20px;
+    margin-left: 250px; /* Width of the navbar */
+    transition: margin-left 0.3s; /* Smooth transition when navbar is toggled */
+}
+
+#navbar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 250px;
+    height: 100%;
+    background-color: #1e1e23;
+    border-right: 1px solid #333;
+    overflow-y: auto;
+    transition: left 0.3s;
+    border-top-right-radius: 10px;
+    border-bottom-right-radius: 10px;
+}
+
+#navbar nav {
+    position: relative;
+    padding-top: 50px; /* Space for the toggle button */
+}
+
+#navbar button {
+    position: fixed;
+    top: 10px;
+    left: 10px;
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+}
+
+#navbar button img {
+    width: 30px;
+    height: 30px;
+}
+
+nav ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+    word-wrap: break-word;
+}
+
+nav ul li {
+    padding: 10px;
+    text-align: center;
+}
+
+nav ul li a {
+    text-decoration: none;
+    color: #fff;
+}
+
+nav ul li a:hover {
+    color: #ddd;
+}
+
+#games {
+    margin-top: 20px;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px; /* Adds space between the grid items */
+}
+
+#games .game {
+    display: flex;
+    align-items: center;
+    background-color: #1e1e23;
+    border: 1px solid #333;
+    border-radius: 10px;
+    margin-bottom: 20px;
+    padding: 10px;
+}
+
+#games .game img {
+    width: 100px;
+    height: auto;
+    border-radius: 5px;
+    margin-right: 20px;
+}
+
+#games .game h3 {
+    flex-grow: 1;
+}
+
+#games .game button {
+    background-color: #333;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    cursor: pointer;
+    border-radius: 5px;
+    margin-right: 20px;
+}
+
+#games .game button:hover {
+    background-color: #555;
+}
+
+#changelog {
+    margin-top: 40px;
+}
+
+#changelog ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+#changelog li {
+    background-color: #1e1e23;
+    border: 1px solid #333;
+    border-radius: 10px;
+    margin-bottom: 10px;
+    padding: 10px;
+}
+
+/* Style the scrollbar */
+::-webkit-scrollbar {
+    width: 10px;
+}
+
+::-webkit-scrollbar-track {
+    background: #1e1e23;
+    border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #333;
+    border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #555;
+}
+
+#iframeContainer {
+    position: relative;
+    bottom: 0;
+    right: 0;
+    height: 200px;
+    width: 300px;
+    border: none;
+}
+
+.feedback-section {
+    margin: 20px 0;
+    border: 2px solid #ccc;
+    margin-left: 25%;
+    margin-right: 25%;
+    background-color: #1f1e22;
+    border-radius: 10px;
+    text-align: center; /* Center the text and inline elements */
+    padding: 15px;
+}
+
+.feedback-section input {
+    width: 80%; /* Adjust width for better visual layout */
+    padding: 10px;
+    margin-top: 10px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    box-sizing: border-box;
+}
+
+button {
+    background-color: #333;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    cursor: pointer;
+    border-radius: 5px;
+    margin-right: 20px;
+}
+
+.search-bar {
+            width: 100%;
+            max-width: 300px;
+            padding: 10px;
+            margin: 20px 0;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            font-size: 16px;
+        }

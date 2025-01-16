@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<title>Drift Boss Unblocked</title>
+	<meta name="description" content="Drift Boss, Drift Boss Unblocked, Drift Boss Math Playground">
+	<meta property="og:image" content="drift-boss.png" />
+
+	<link rel="icon" type="image/x-icon" href="/media/graphics/misc/favicon.ico" />
+	<meta http-equiv="Content-type" content="text/html; charset=utf-8">
+	<!-- Use this metatag when Apple fixes their IOS 9
+	<meta name="viewport" content="width=device-width,height=device-height, initial-scale=1, maximum-scale=1, user-scalable=0, minimal-ui"/>
+	-->
+
+	<!--Temporary fix for IOS 9-->
+	<meta name="viewport"
+		content="initial-scale=1.0001, minimum-scale=1.0001, maximum-scale=1.0001, user-scalable=no, minimal-ui" />
+
+	<meta name="apple-mobile-web-app-capable" content="yes" />
+
+	<link rel="stylesheet" type="text/css" href="game.css">
+
+	<script>
+		localStorage.setItem('mjs-drift-boss-game-v1.0.1-dailyreward', '{"sound":0.7,"music":0.3,"score":0,"hasShownTutorial":true,"collectedCoin":0,"cars":[0],"currentCar":0,"currentTip":1,"booster1":1,"booster2":1,"booster3":1,"ko":1,"hasShownBoosterTutorial":true}');
+        setTimeout(() => {
+            const script = document.createElement('script');
+            script.type = "text/javascript";
+            script.src = "game.js";
+            document.body.appendChild(script);
+        }, 3000);
+    </script>
+	<!-- AnalyticsCode -->
+
+	<!-- APICode -->
+</head>
+
+<body>
+	<!--body-->
+	<script type="module">
+		import { getAuth, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/10.12.4/firebase-auth.js';
+		import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.4/firebase-app.js';
+		import { getFirestore, doc, getDoc, setDoc, updateDoc } from 'https://www.gstatic.com/firebasejs/10.12.4/firebase-firestore.js';
+
+		const firebaseConfig = {
+			apiKey: "AIzaSyCrNMzKkmWCl0yfP_mLO9nhn1p1n7DMbfk",
+			authDomain: "elementgames-v4.firebaseapp.com",
+			projectId: "elementgames-v4",
+			storageBucket: "elementgames-v4.appspot.com",
+			messagingSenderId: "604113750396",
+			appId: "1:604113750396:web:8343b59f3b2a7e893efcf9",
+			measurementId: "G-CV6TY6NJBR"
+		};
+
+		const app = initializeApp(firebaseConfig);
+		const auth = getAuth(app);
+		const db = getFirestore(app);
+
+		async function GetUsername() {
+			return new Promise((resolve, reject) => {
+				onAuthStateChanged(auth, async (user) => {
+					if (user) {
+						try {
+							const userDoc = doc(db, "users", user.uid);
+							const docSnap = await getDoc(userDoc);
+
+							if (docSnap.exists()) {
+								const userData = docSnap.data();
+								resolve(userData.username);
+							} else {
+								console.log('No user document found.');
+								resolve(null);
+							}
+						} catch (error) {
+							console.error('Error getting user document:', error);
+							reject('Error retrieving user data.');
+						}
+					} else {
+						// Redirect to login if no user is logged in
+						window.location.href = 'login.html';
+						resolve(null);
+					}
+				});
+			});
+		}
+
+		function saveUsername(username) {
+			localStorage.setItem("eg-username", username);
+		}
+
+		// Call GetUsername and save the result when the page loads
+		GetUsername().then(username => {
+			if (username) {
+				saveUsername(username);
+				console.log("Username saved to localStorage:", username);
+			} else {
+				console.log("No username to save.");
+			}
+		});
+
+		// Function to check for an existing game save or create a new one
+		async function initializeGame() {
+			localStorage.setItem('mjs-drift-boss-game-v1.0.1-dailyreward', '{"sound":0.7,"music":0.3,"score":0,"hasShownTutorial":true,"collectedCoin":0,"cars":[0],"currentCar":0,"currentTip":1,"booster1":1,"booster2":1,"booster3":1,"ko":1,"hasShownBoosterTutorial":true}');
+			const gameData = localStorage.getItem('mjs-drift-boss-game-v1.0.1-dailyreward');
+
+			if (gameData) {
+				console.log("Existing game save found.");
+				const usernameLD = localStorage.getItem('eg-username');
+
+				// Fetch save data
+				async function GetSaveData() {
+					return new Promise((resolve, reject) => {
+						onAuthStateChanged(auth, async (user) => {
+							if (user) {
+								try {
+									const saveDoc = doc(db, "driftBoss", usernameLD);
+									const docSnap = await getDoc(saveDoc);
+
+									if (docSnap.exists()) {
+										const userData = docSnap.data();
+										resolve(userData.save);
+									} else {
+										console.log('No save document found in Firestore.');
+										resolve(null);
+									}
+								} catch (error) {
+									console.error('Error getting save document:', error);
+									reject('Error retrieving save data.');
+								}
+							} else {
+								window.location.href = 'login.html';
+								resolve(null);
+							}
+						});
+					});
+				}
+
+				const retrievedGameSave = await GetSaveData();
+				localStorage.setItem('mjs-drift-boss-game-v1.0.1-dailyreward', retrievedGameSave || '{"sound":0.7,"music":0.3,"score":0,"hasShownTutorial":true,"collectedCoin":0,"cars":[0],"currentCar":0,"currentTip":1,"booster1":1,"booster2":1,"booster3":1,"ko":1,"hasShownBoosterTutorial":true}');
+				console.log("Initialized game save data.");
+				alert("Found existing save data for current user. GAME DATA IS SAVED EVERY 15 SECONDS SO DONT CLOSE THE TAB UNTIL 15 SEC LATER");
+			} else {
+				//localStorage.setItem('mjs-drift-boss-game-v1.0.1-dailyreward', '{"sound":0.7,"music":0.3,"score":0,"hasShownTutorial":true,"collectedCoin":0,"cars":[0],"currentCar":0,"currentTip":1,"booster1":1,"booster2":1,"booster3":1,"ko":1,"hasShownBoosterTutorial":true}');
+			}
+
+			// Function to save game data to Firestore
+			async function saveGameDataToFirestore() {
+				const cookieClickerData = localStorage.getItem('mjs-drift-boss-game-v1.0.1-dailyreward');
+				const usr = localStorage.getItem('eg-username');
+
+				try {
+					console.log('Saving game data...', cookieClickerData);
+					const cookieClickerDoc = doc(db, "driftBoss", usr);
+					const docSnap = await getDoc(cookieClickerDoc);
+
+					if (docSnap.exists()) {
+						await updateDoc(cookieClickerDoc, { save: cookieClickerData });
+						console.log('Game data updated in Firestore.');
+					} else {
+						await setDoc(cookieClickerDoc, { save: cookieClickerData });
+						console.log('Game data saved to Firestore.');
+					}
+				} catch (error) {
+					console.error('Error saving game data:', error);
+				}
+			}
+
+			setInterval(async () => {
+				await saveGameDataToFirestore();
+			}, 15000);
+
+			// After all async operations in initializeGame are complete, load the iframe
+
+		}
+
+		window.addEventListener('load', initializeGame);
+	</script>
+
+	<div id="ajaxbar">
+		<div id="game"><canvas id="canvas"></canvas></div>
+		<div id="webgl"><canvas id="webglcanvas"></canvas></div>
+
+		<div id="orientate"><img src="media/graphics/orientate/landscape.jpg" /></div>
+		<div id="play" class="play" onclick=""><img src="media/graphics/splash/mobile/cover-start.jpg" /></div>
+		<!--<img id="scrollDown" width="220" height="277"></img>-->
+
+	</div>
+	<!-- <div id="tempdiv"><br><br><br></div> -->
+	<!-- APICode2 -->
+
+
+	<!-- END OF TEST -->
+	<script src="js/analytics_ubg_v1_4.js"></script>
+	<script src="js/ubg235_client_v1_1.js"></script>
+
+</body>
+
+</html>

@@ -1,0 +1,89 @@
+ <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Leaderboard</title>
+    <style>
+        body {
+            background-color: #141419;
+            color: white;
+            font-family: Arial, sans-serif;
+        }
+        table {
+            width: 50%;
+            margin: 50px auto;
+            border-collapse: collapse;
+            background-color: #1e1e23;
+            border-radius: 8px;
+        }
+        th, td {
+            padding: 10px;
+            text-align: center;
+            border: 1px solid #2e2e33;
+        }
+        th {
+            background-color: #2e2e33;
+        }
+    </style>
+</head>
+<body>
+    <h1 style="text-align: center;">Leaderboard</h1>
+    <table id="leaderboard">
+        <thead>
+            <tr>
+                <th>Rank</th>
+                <th>Username</th>
+                <th>Time</th>
+            </tr>
+        </thead>
+        <tbody>
+        </tbody>
+    </table>
+
+    <script type="module">
+        import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.4/firebase-app.js';
+        import { getFirestore, collection, getDocs, query, orderBy } from 'https://www.gstatic.com/firebasejs/10.12.4/firebase-firestore.js';
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyCrNMzKkmWCl0yfP_mLO9nhn1p1n7DMbfk",
+            authDomain: "elementgames-v4.firebaseapp.com",
+            projectId: "elementgames-v4",
+            storageBucket: "elementgames-v4.appspot.com",
+            messagingSenderId: "604113750396",
+            appId: "1:604113750396:web:8343b59f3b2a7e893efcf9",
+            measurementId: "G-CV6TY6NJBR"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        async function fetchLeaderboard() {
+            const leaderboardTable = document.getElementById('leaderboard').getElementsByTagName('tbody')[0];
+            leaderboardTable.innerHTML = ''; // Clear any existing rows
+
+            try {
+                const platformerCollection = collection(db, "Platformer");
+                const q = query(platformerCollection, orderBy("score"));
+                const querySnapshot = await getDocs(q);
+
+                let rank = 1;
+                querySnapshot.forEach((doc) => {
+                    const data = doc.data();
+                    const newRow = leaderboardTable.insertRow();
+                    newRow.innerHTML = `
+                        <td>${rank}</td>
+                        <td>${doc.id}</td>
+                        <td>${data.score}</td>
+                    `;
+                    rank++;
+                });
+            } catch (error) {
+                console.error('Error fetching leaderboard:', error);
+            }
+        }
+
+        window.addEventListener('load', fetchLeaderboard);
+    </script>
+</body>
+</html>

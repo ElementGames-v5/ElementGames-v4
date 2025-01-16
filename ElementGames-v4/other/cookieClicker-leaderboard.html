@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Leaderboard</title>
+    <style>
+        body {
+            background-color: #14141900;
+            color: #f0f0f0;
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .leaderboard {
+            width: 80%;
+            max-width: 600px;
+            background-color: #1e1e23;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+            overflow-y: auto;
+            /* Enables scrolling */
+            max-height: 500px;
+            /* Maximum height of the leaderboard */
+        }
+
+        h1 {
+            text-align: center;
+            margin-top: 0;
+            color: #ffcc00;
+        }
+
+        .entry {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid #333;
+        }
+
+        .entry:last-child {
+            border-bottom: none;
+        }
+
+        .username {
+            font-weight: bold;
+        }
+
+        .score {
+            color: #ffcc00;
+        }
+
+        /* Styling for dark theme scrollbar */
+        .leaderboard::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .leaderboard::-webkit-scrollbar-track {
+            background: #1e1e23;
+        }
+
+        .leaderboard::-webkit-scrollbar-thumb {
+            background-color: #333;
+            border-radius: 10px;
+            border: 2px solid #1e1e23;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="leaderboard">
+        <h1>Leaderboard</h1>
+        <div id="leaderboardEntries"></div>
+    </div>
+
+    <!-- Firebase Setup -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
+    <script>
+        // Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyCrNMzKkmWCl0yfP_mLO9nhn1p1n7DMbfk",
+            authDomain: "elementgames-v4.firebaseapp.com",
+            projectId: "elementgames-v4",
+            storageBucket: "elementgames-v4.appspot.com",
+            messagingSenderId: "604113750396",
+            appId: "1:604113750396:web:8343b59f3b2a7e893efcf9",
+            measurementId: "G-CV6TY6NJBR"
+        };
+
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
+
+        // Long number format mappings
+        const formatLong = [' thousand', ' million', ' billion', ' trillion', ' quadrillion', ' quintillion', ' sextillion', ' septillion', ' octillion', ' nonillion', ' decillion', ' undecillion', ' duodecillion', ' tredecillion', ' quattuordecillion', ' quinquadecillion', ' sexdecillion', ' septendecillion', ' octodecillion', ' novemdecillion', ' vigintillion', ' unvigintillion'];
+
+        const prefixes = ['', 'un', 'duo', 'tre', 'quattuor', 'quin', 'sex', 'septen', 'octo', 'novem'];
+        const suffixes = ['decillion', 'vigintillion', 'trigintillion', 'quadragintillion', 'quinquagintillion', 'sexagintillion', 'septuagintillion', 'octogintillion', 'nonagintillion'];
+
+        // Parse and rank score values based on magnitude
+        function parseScore(scoreStr) {
+            let [num, unit] = scoreStr.split(' ');
+            num = parseFloat(num.replace(/,/g, '')); // Remove commas and parse as float
+            if (!isNaN(num)) {
+                if (!unit) return num; // Basic number without magnitude
+                let index = formatLong.indexOf(` ${unit.toLowerCase()}`);
+                if (index === -1) {
+                    for (let i = 0; i < prefixes.length; i++) {
+                        if (unit.startsWith(prefixes[i]) && unit.endsWith(suffixes[0])) {
+                            index = 10 + i;
+                            break;
+                        }
+                    }
+                }
+                return index !== -1 ? num * Math.pow(10, (index + 1) * 3) : null;
+            }
+            return null; // Invalid format or NaN
+        }
+
+        // Fetch and sort scores from Firebase
+        async function fetchLeaderboard() {
+            const leaderboardEntries = document.getElementById('leaderboardEntries');
+            const snapshot = await db.collection("cookieClicker").get();
+
+            let scores = [];
+            snapshot.forEach(doc => {
+                const data = doc.data();
+                const scoreStr = data.score; // Retrieve the score as a string
+                if (scoreStr && typeof scoreStr === 'string') { // Ensure it exists and is a string
+                    const scoreValue = parseScore(scoreStr);
+                    if (scoreValue !== null) {
+                        scores.push({ username: doc.id, score: scoreStr, value: scoreValue });
+                    }
+                } else {
+                    // Handle missing or invalid score
+                    scores.push({ username: doc.id, score: 'Invalid', value: -Infinity }); // Invalid scores go to the bottom
+                }
+            });
+
+            // Sort by value, descending
+            scores.sort((a, b) => b.value - a.value);
+
+            // Display sorted leaderboard entries
+            leaderboardEntries.innerHTML = '';
+            scores.forEach(entry => {
+                const entryDiv = document.createElement('div');
+                entryDiv.classList.add('entry');
+                entryDiv.innerHTML = `<span class="username">${entry.username}</span><span class="score">${entry.score}</span>`;
+                leaderboardEntries.appendChild(entryDiv);
+            });
+        }
+
+
+        // Load leaderboard on page load
+        window.onload = fetchLeaderboard;
+    </script>
+</body>
+
+</html>

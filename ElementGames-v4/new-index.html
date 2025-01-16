@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home</title>
+    <link rel="icon" type="image/x-icon" href="/ElementGames-v4/media/favicon.png">
+    <link rel="stylesheet" href="style.css">
+
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-299D309YZK"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag() { dataLayer.push(arguments); }
+        gtag('js', new Date());
+
+        gtag('config', 'G-299D309YZK');
+    </script>
+
+    <style>
+        /* Style for search bar */
+        .search-bar {
+            width: 100%;
+            max-width: 300px;
+            padding: 10px;
+            margin: 20px 0;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            font-size: 16px;
+        }
+
+        /* Responsive layout */
+        @media (max-width: 768px) {
+            .main-content {
+                padding: 10px;
+            }
+
+            #games {
+                display: grid;
+                grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+                gap: 20px;
+            }
+
+            .game img {
+                max-width: 100%;
+                height: auto;
+            }
+
+            .game {
+                text-align: center;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .search-bar {
+                width: 100%;
+                max-width: 100%;
+            }
+        }
+    </style>
+
+</head>
+
+<body>
+    <!-- Navbar -->
+    <div id="navbar"></div>
+
+    <!-- Main content -->
+    <div class="main-content" id="main-content">
+        <header>
+            <h1>Element Games v4</h1>
+            <p>- Version 4.6 -</p>
+            <br>
+
+            <!-- Search bar for filtering games -->
+            <input type="text" id="search-bar" class="search-bar" placeholder="Search for games..."
+                oninput="filterGames()">
+
+        </header>
+
+        <h2>Games and Tools</h2>
+        <section id="games">
+            <div class="games-container">
+                <div class="game">
+                    <img src="/ElementGames-v4/media/game-images/buckshot.jpg" alt="Buckshot Roulette">
+                    <h3>Buckshot Roulette</h3>
+                    <button onclick="window.location.href='/ElementGames-v4/tools/buckshot.html'">Play</button>
+                </div>
+                <div class="game">
+                    <img src="/ElementGames-v4/media/game-images/smash-karts.jpg" alt="Smash Karts">
+                    <h3>Smash Karts</h3>
+                    <button onclick="window.location.href='/ElementGames-v4/games/smash-karts.html'">Play</button>
+                </div>
+                <div class="game">
+                    <img src="/ElementGames-v4/media/game-images/1v1-lol.png" alt="1v1.lol">
+                    <h3>1v1.lol</h3>
+                    <button onclick="window.location.href='/ElementGames-v4/games/1v1-lol.html'">Play</button>
+                </div>
+        </section>
+    </div>
+
+    <script>
+        // Function to filter games based on the search input
+        function filterGames() {
+            const searchQuery = document.getElementById("search-bar").value.toLowerCase();
+            const games = document.querySelectorAll(".game");
+
+            games.forEach(game => {
+                const gameName = game.querySelector("h3").textContent.toLowerCase();
+                if (gameName.includes(searchQuery)) {
+                    game.style.display = "block";
+                } else {
+                    game.style.display = "none";
+                }
+            });
+        }
+    </script>
+
+</body>
+
+</html>

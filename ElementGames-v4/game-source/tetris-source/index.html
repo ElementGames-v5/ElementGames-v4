@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tetris Source</title>
+    <!-- Link to the Ruffle player -->
+    <script src="ruffle.js"></script>
+</head>
+
+<body>
+    <!-- Container to embed the SWF file -->
+    <div id="flash-container">
+        <!-- The object element for the SWF file -->
+        <object type="application/x-shockwave-flash" data="flash-tetris.swf" width="760" height="530">
+            <param name="movie" value="BTD5.swf">
+            Your browser does not support Flash content, and Ruffle cannot run.
+        </object>
+    </div>
+
+    <!-- Initialize Ruffle -->
+    <script>
+        // This line initializes Ruffle on the web page
+        ruffle_web("flash-container");
+    </script>
+</body>
+
+</html>

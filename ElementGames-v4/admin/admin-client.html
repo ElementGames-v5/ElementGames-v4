@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-299D309YZK"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag() { dataLayer.push(arguments); }
+        gtag('js', new Date());
+
+        gtag('config', 'G-299D309YZK');
+    </script>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Client</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background-color: #141419;
+            color: #fff;
+            display: flex;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        #console {
+            padding: 20px;
+            overflow-y: auto;
+            border-right: 1px solid #444;
+            display: flex;
+            flex-direction: column;
+            min-width: 300px;
+            max-width: 65%;
+            box-sizing: border-box;
+            position: relative;
+            width: 800px;
+        }
+
+        .resize-handle {
+            position: absolute;
+            right: 0;
+            top: 0;
+            width: 10px;
+            height: 100%;
+            cursor: ew-resize;
+            background-color: #444;
+        }
+
+        #output {
+            flex: 1;
+            overflow-y: auto;
+        }
+
+        #customMessageContainer {
+            display: flex;
+            align-items: center;
+            padding-top: 10px;
+            justify-content: space-between;
+        }
+
+        #customMessage {
+            flex: 1;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            width: 100%;
+            margin-right: 10px;
+            box-sizing: border-box;
+        }
+
+        #sendCustomMessage {
+            background-color: #444;
+            color: #fff;
+            cursor: pointer;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            box-sizing: border-box;
+        }
+
+        #sendCustomMessage:hover {
+            background-color: #555;
+        }
+
+        #fetchUid {
+            background-color: #444;
+            color: #fff;
+            cursor: pointer;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            box-sizing: border-box;
+        }
+
+        #fetchUid:hover {
+            background-color: #555;
+        }
+
+        .command-div {
+            background-color: #1e1e23;
+            border: 1px solid #333;
+            border-radius: 10px;
+            margin: 10px;
+            padding: 10px;
+            width: calc(50% - 20px);
+            box-sizing: border-box;
+        }
+
+        #controls {
+            display: flex;
+            flex-wrap: wrap;
+            padding: 30px;
+            overflow-y: auto;
+            min-width: 800px;
+            box-sizing: border-box;
+            align-content: flex-start;
+        }
+
+        .control-group {
+            display: flex;
+            flex-wrap: wrap;
+            width: 100%;
+        }
+
+        .control-group input,
+        .control-group button {
+            padding: 10px;
+            margin-bottom: 10px;
+            border: none;
+            border-radius: 5px;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        .control-group button {
+            background-color: #444;
+            color: #fff;
+            cursor: pointer;
+        }
+
+        .control-group button:hover {
+            background-color: #555;
+        }
+
+        h2 {
+            text-align: center;
+            margin: 0;
+            padding: 0 0 10px 0;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="console">
+        <div class="resize-handle"></div>
+        <div id="output"><h2>Console</h2></div>
+        <div id="customMessageContainer">
+            <input type="text" id="customMessage" placeholder="Enter custom message" />
+            <button id="sendCustomMessage">Send</button>
+
+        </div>
+        <br>
+        <button id="fetchUid">Fetch UID's</button>
+    </div>
+    <div id="controls">
+        <div class="control-group">
+            <div class="command-div">
+                <h2>UID</h2>
+                <input type="text" id="uidInput" placeholder="Enter UID" />
+                <button id="all-uids">All UID's</button>
+                <script>
+                    // JavaScript to handle button click and change input value
+                    document.getElementById('all-uids').addEventListener('click', () => {
+                        // Get the input element by its ID
+                        const inputElement = document.getElementById('uidInput');
+
+                        // Set the value of the input box
+                        inputElement.value = '00000';
+                    });
+                </script>
+                <hr>
+                <br>
+                <h2>Alert</h2>
+                <input type="text" id="alertInput" placeholder="Enter Text" />
+                <button id="alertButton">Send Alert</button>
+                <hr>
+                <br>
+                <h2>Alert Response</h2>
+                <input type="text" id="alertResponseInput" placeholder="Enter Text" />
+                <input type="number" id="alertResponseMinInput" placeholder="Minimum Length" />
+                <button id="alertResponseButton">Send Alert</button>
+            </div>
+            <div class="command-div">
+                <h2>Redirect</h2>
+                <input type="text" id="redirectInput" placeholder="Enter URL to redirect" />
+                <button id="redirectButton">Send Redirect</button>
+                <hr>
+                <br>
+                <h2>New Tab</h2>
+                <input type="text" id="newTabInput" placeholder="Enter URL" />
+                <button id="newTabButton">Open in New Tab</button>
+                <hr>
+                <br>
+                <h2>URL Pranks</h2>
+                <button id="rickroll">Rickroll</button>
+                <button id="fatCat">Fat Cat</button>
+                <p>Toggle whether the prank will open in a new tab or redirect the current screen.</p>
+                <button id="toggle">newTab</button>
+                <hr>
+                <br>
+                <h2>Audio Pranks</h2>
+                <button id="rickroll-sound">Rickroll Sound </button>
+                <button id="tacobell">Tacobell Sound</button>
+                <input type="text" id="custom-sound" placeholder="Enter Sound URL" />
+                <button id="customAudio">Play Sound</button>
+
+                <script>
+                    let toggleValue = "newTab";
+                    let currentValue = "New Tab";
+                    const button = document.getElementById('toggle');
+
+                    button.innerText = currentValue;
+
+                    button.addEventListener('click', () => {
+                        if (button.innerText === 'Redirect') {
+                            button.innerText = 'New Tab';
+                            toggleValue = "newTab";
+                        } else {
+                            button.innerText = 'Redirect';
+                            toggleValue = "redirect";
+                        }
+                    });
+                </script>
+            </div>
+        </div>
+    </div>
+    <script>
+        // Initialize WebSocket connection
+        const ws = new WebSocket('wss://free.blr2.piesocket.com/v3/1?api_key=3445u4bvynnxUPgOxcZlh6ldf03f0HgsAX9ISNT6&notify_self=0');
+
+        // Handle incoming messages
+        ws.onmessage = (event) => {
+            const outputDiv = document.getElementById('output');
+            outputDiv.innerHTML += `<p>${event.data}</p>`;
+            outputDiv.scrollTop = outputDiv.scrollHeight;  // Auto-scroll to bottom
+        };
+
+        // Handle WebSocket errors
+        ws.onerror = (error) => {
+            const outputDiv = document.getElementById('output');
+            outputDiv.innerHTML += `<p style="color: red;">WebSocket error: ${error}</p>`;
+            outputDiv.scrollTop = outputDiv.scrollHeight;
+        };
+
+        // Handle WebSocket closure
+        ws.onclose = () => {
+            const outputDiv = document.getElementById('output');
+            outputDiv.innerHTML += `<p style="color: orange;">WebSocket connection closed</p>`;
+            outputDiv.scrollTop = outputDiv.scrollHeight;
+        };
+
+        // Send redirect command
+        document.getElementById('redirectButton').addEventListener('click', () => {
+            const uid = document.getElementById('uidInput').value;
+            const url = document.getElementById('redirectInput').value;
+            if (uid && url) {
+                ws.send(`${uid}|redirect|${url}`);
+            } else {
+                alert('Please enter both UID and URL.');
+            }
+        });
+
+        // Send NewTab Thing
+        document.getElementById('newTabButton').addEventListener('click', () => {
+            const uid = document.getElementById('uidInput').value;
+            const url = document.getElementById('newTabInput').value;
+            if (uid && url) {
+                ws.send(`${uid}|newTab|${url}`);
+            } else {
+                alert('Please enter both UID and a valid URL.');
+            }
+        });
+
+        // Send Alert
+        document.getElementById('alertButton').addEventListener('click', () => {
+            const uid = document.getElementById('uidInput').value;
+            const text = document.getElementById('alertInput').value;
+            if (uid && text) {
+                ws.send(`${uid}|alert|${text}`);
+            } else {
+                alert('Please enter both the UID and text');
+            }
+        });
+
+        // Send AlertResponse
+        document.getElementById('alertResponseButton').addEventListener('click', () => {
+            const uid = document.getElementById('uidInput').value;
+            const text = document.getElementById('alertResponseInput').value;
+            const minLength = document.getElementById('alertResponseMinInput').value;
+            if (uid && text && minLength) {
+                ws.send(`${uid}|alertResponse|${text}|${minLength}`);
+            } else {
+                alert('Please enter the UID, text, and min length fields');
+            }
+        });
+
+        // Send prank
+        document.getElementById('rickroll').addEventListener('click', () => {
+            const uid = document.getElementById('uidInput').value;
+            if (uid) {
+                ws.send(`${uid}|${toggleValue}|https://cdn.mtdv.me/video/rick.mp4`);
+            } else {
+                alert('Please enter a valid UID');
+            }
+        });
+        document.getElementById('fatCat').addEventListener('click', () => {
+            const uid = document.getElementById('uidInput').value;
+            if (uid) {
+                ws.send(`${uid}|${toggleValue}|/ElementGames-v4/media/fatCat.png`);
+            } else {
+                alert('Please enter a valid UID');
+            }
+        });
+
+        // Fetch UID's
+        document.getElementById('fetchUid').addEventListener('click', () => {
+            ws.send(`fetchUID|null`);
+        });
+
+        // Send custom message
+        document.getElementById('sendCustomMessage').addEventListener('click', () => {
+            const message = document.getElementById('customMessage').value;
+            if (message) {
+                ws.send(message);
+            } else {
+                alert('Please enter a custom message.');
+            }
+        });
+
+        //Audio Pranks
+        document.getElementById('rickroll-sound').addEventListener('click', () => {
+            const uid = document.getElementById('uidInput').value;
+            if (uid) {
+                ws.send(`${uid}|audio|/ElementGames-v4/media/rickroll.mp3`);
+            } else {
+                alert('Please enter a valid UID');
+            }
+        });
+        document.getElementById('tacobell').addEventListener('click', () => {
+            const uid = document.getElementById('uidInput').value;
+            if (uid) {
+                ws.send(`${uid}|audio|/ElementGames-v4/media/tacobell.mp3`);
+            } else {
+                alert('Please enter a valid UID');
+            }
+        });
+        document.getElementById('customAudio').addEventListener('click', () => {
+            const uid = document.getElementById('uidInput').value;
+            const soundUrl = document.getElementById('custom-sound').value;
+            if (uid && soundUrl) {
+                ws.send(`${uid}|audio|${soundUrl}`);
+            } else {
+                alert('Please enter both UID and a valid .MP3 URL.');
+            }
+        });
+
+        // Resize logic
+        const consoleDiv = document.getElementById('console');
+        const resizeHandle = document.querySelector('.resize-handle');
+
+        function resize(e) {
+            const newWidth = e.clientX - consoleDiv.getBoundingClientRect().left;
+            const minWidth = 300;
+            const maxWidth = document.body.offsetWidth - 50; // 50 is the width of the handle
+            if (newWidth >= minWidth && newWidth <= maxWidth) {
+                consoleDiv.style.width = `${newWidth}px`;
+            }
+        }
+
+        resizeHandle.addEventListener('mousedown', (e) => {
+            e.preventDefault();
+            document.addEventListener('mousemove', resize);
+            document.addEventListener('mouseup', () => {
+                document.removeEventListener('mousemove', resize);
+            }, { once: true });
+        });
+    </script>
+</body>
+
+</html>

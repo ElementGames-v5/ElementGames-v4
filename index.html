@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Join Class - White 1 SLA</title>
+  <link rel="shortcut icon" type="image/x-icon" href="favicon.png"/>
+  <style>
+    /* Style the iframe to take up the entire page */
+    html,
+    body {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      overflow: hidden;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    iframe {
+      width: 100vw;
+      height: 100vh;
+      border: none;
+    }
+  </style>
+</head>
+
+<body>
+  <!-- Fullscreen iframe with full permissions for game hosting -->
+  <iframe id="gameFrame" src="/ElementGames-v4" <!-- Default page to load -->
+    allow="fullscreen; gamepad; accelerometer; gyroscope; autoplay; encrypted-media; picture-in-picture"
+    allowfullscreen
+    mozallowfullscreen
+    msallowfullscreen
+    webkitallowfullscreen
+    ></iframe>
+
+  <script>
+    // Get URL parameters
+    const urlParams = new URLSearchParams(window.location.search);
+    const navigateUrl = urlParams.get('navigate');
+    const admin = urlParams.get('admin');
+
+    // Check if "navigate" parameter is set, and if so, update the iframe source
+    if (navigateUrl || admin) {
+      const iframe = document.getElementById('gameFrame');
+      if (admin == "true" || navigateUrl == "admin") {
+        iframe.src = "/ElementGames-v4/admin/admin-client.html";
+      } else {
+        iframe.src = navigateUrl;
+      }
+    }
+  </script>
+</body>
+
+</html>

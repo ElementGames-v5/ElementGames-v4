@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <style>
+        html,
+        body {
+            height: 100%;
+            margin: 0;
+            overflow: hidden;
+        }
+
+        body {
+            background-color: #171717;
+            font-family: sans-serif;
+        }
+
+        .container {
+            display: flex;
+            width: 100vw;
+            height: 100vh;
+            max-width: 100%;
+            box-sizing: border-box;
+        }
+
+        .sidebar {
+            width: 250px;
+            background-color: #1f1f1f;
+            padding: 20px;
+            height: 100%;
+            box-sizing: border-box;
+        }
+
+        .sidebar .new-chat-button {
+            background-color: #2a2a2a;
+            color: white;
+            border: none;
+            border-radius: 20px;
+            padding: 10px 15px;
+            cursor: pointer;
+            width: 100%;
+            margin-bottom: 20px;
+        }
+
+        .sidebar .search {
+            background-color: #2a2a2a;
+            border-radius: 20px;
+            padding: 10px;
+            margin-bottom: 20px;
+        }
+
+        .sidebar input[type="text"] {
+            background-color: transparent;
+            border: none;
+            color: white;
+            width: 100%;
+        }
+
+        .sidebar .conversation p {
+            margin-bottom: 15px;
+            color: white;
+            cursor: pointer;
+        }
+
+        .message-thread {
+            flex: 1;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            box-sizing: border-box;
+        }
+
+        .message-area {
+            flex: 1;
+            overflow-y: auto;
+            max-height: 70vh;
+            padding: 10px;
+            background-color: #181818;
+            color: white;
+        }
+
+        .message {
+            margin-bottom: 15px;
+        }
+
+        .sent {
+            text-align: right;
+        }
+
+        .sent .bubble {
+            background-color: #2271d7;
+            color: white;
+            border-radius: 10px;
+            padding: 10px;
+            display: inline-block;
+        }
+
+        .received .bubble {
+            background-color: #202124;
+            color: white;
+            border-radius: 10px;
+            padding: 10px;
+            display: inline-block;
+        }
+
+        .time {
+            font-size: 12px;
+            color: #888;
+            margin-top: 5px;
+        }
+
+        .input-area {
+            display: flex;
+            align-items: center;
+            padding-top: 10px;
+        }
+
+        .input-area input[type="text"] {
+            flex: 1;
+            background-color: #2a2a2a;
+            border: none;
+            border-radius: 20px;
+            padding: 10px;
+            color: white;
+            margin-right: 10px;
+        }
+
+        .input-area button {
+            background-color: #2271d7;
+            color: white;
+            border: none;
+            border-radius: 20px;
+            padding: 10px 15px;
+            cursor: pointer;
+        }
+    </style>
+    <script src="https://www.gstatic.com/firebasejs/9.6.8/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.8/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.8/firebase-auth-compat.js"></script>
+    <script>
+        const firebaseConfig = {
+            apiKey: "AIzaSyCrNMzKkmWCl0yfP_mLO9nhn1p1n7DMbfk",
+            authDomain: "elementgames-v4.firebaseapp.com",
+            projectId: "elementgames-v4",
+            storageBucket: "elementgames-v4.appspot.com",
+            messagingSenderId: "604113750396",
+            appId: "1:604113750396:web:8343b59f3b2a7e893efcf9",
+            measurementId: "G-CV6TY6NJBR"
+        };
+        firebase.initializeApp(firebaseConfig);
+    </script>
+</head>
+
+<body>
+    <div class="container">
+        <div class="sidebar">
+            <button class="new-chat-button">New Chat</button>
+            <div class="chat-container">
+                <div class="user-search">
+                    <input type="text" id="userSearchInput" placeholder="Search for a user">
+                    <button id="userSearchBtn">Search</button>
+                    <div id="userList"></div>
+                </div>
+            </div>
+            <div class="conversation">
+                <p>John Doe</p>
+                <hr>
+                <p>Jane Smith</p>
+                <hr>
+                <p>Group Chat</p>
+                <hr>
+                <p>Another Person</p>
+            </div>
+        </div>
+        <div class="message-thread">
+            <div class="message-area"></div>
+            <div class="input-area">
+                <input type="text" id="messageInput" placeholder="Type a message">
+                <button id="sendButton">Send</button>
+            </div>
+        </div>
+    </div>
+    <script>
+        const newChatButton = document.querySelector('.new-chat-button');
+        const messageArea = document.querySelector('.message-area');
+        const sendButton = document.querySelector('#sendButton');
+        const messageInput = document.querySelector('#messageInput');
+        const conversationItems = document.querySelectorAll('.conversation p');
+
+        newChatButton.addEventListener('click', () => {
+            window.open(
+                'new-chat.html',
+                '_blank' // <- This is what makes it open in a new window.
+            );
+        });
+
+        const chats = {
+            "John Doe": [
+                { sender: "John Doe", text: "Hello!", time: "10:00 AM" },
+                { sender: "You", text: "Hi John!", time: "10:01 AM" }
+            ],
+            "Jane Smith": [
+                { sender: "Jane Smith", text: "What's up?", time: "11:00 AM" },
+                { sender: "You", text: "Not much, you?", time: "11:01 AM" }
+            ]
+        };
+
+        function displayChat(contactName) {
+            const chatHistory = chats[contactName] || [];
+            messageArea.innerHTML = `
+                <h2>Chat with ${contactName}</h2>
+                <div class="message-history">
+                    ${chatHistory.map(message => `
+                        <div class="message ${message.sender === 'You' ? 'sent' : 'received'}">
+                            <div class="bubble">
+                                <p>${message.text}</p>
+                                <div class="time">${message.time}</div>
+                            </div>
+                        </div>
+                    `).join('')}
+                </div>
+            `;
+        }
+
+        conversationItems.forEach(item => {
+            item.addEventListener('click', () => {
+                displayChat(item.textContent);
+            });
+        });
+
+        // Send a new message when the button is clicked
+        sendButton.addEventListener('click', () => {
+            const messageText = messageInput.value.trim();
+            if (messageText) {
+                // Append the new message to the message area
+                const message = {
+                    sender: 'You',
+                    text: messageText,
+                    time: new Date().toLocaleTimeString()
+                };
+                const messageHTML = `
+                    <div class="message sent">
+                        <div class="bubble">
+                            <p>${message.text}</p>
+                            <div class="time">${message.time}</div>
+                        </div>
+                    </div>
+                `;
+                messageArea.innerHTML += messageHTML;
+                messageInput.value = ''; // Clear the input field
+                messageArea.scrollTop = messageArea.scrollHeight; // Scroll to the bottom
+            }
+        });
+    </script>
+    <script scr="script.js"></script>
+</body>
+
+</html>

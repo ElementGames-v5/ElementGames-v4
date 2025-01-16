@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home</title>
+    <link rel="icon" type="image/x-icon" href="/ElementGames-v4/media/favicon.png">
+    <link rel="stylesheet" href="style.css">
+
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-299D309YZK"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag() { dataLayer.push(arguments); }
+        gtag('js', new Date());
+
+        gtag('config', 'G-299D309YZK');
+    </script>
+</head>
+
+<body>
+    <!-- Navbar -->
+    <div id="navbar"></div>
+
+    <!-- Main content -->
+    <div class="main-content" id="main-content">
+        <header>
+            <h1>Element Games v4</h1>
+            <p>- 4.9.9.9.9.9.9 -
+            </p>
+            <br>
+
+
+            <div
+                style="display: flex; align-items: center; background-color: #172f70; padding: 20px; border-radius: 10px;">
+                <div class="qrcode-container" style="position: relative; cursor: pointer;">
+                    <img src="/ElementGames-v4/media/discord/qrcode.png" alt="Discord QR Code"
+                        style="width: 120px; height: auto;">
+                    <button class="fullscreen-button"
+                        style="position: absolute; top: 10px; right: 10px; background-color: rgba(0, 0, 0, 0.5); color: white; padding: 5px 10px; border: none; border-radius: 5px; cursor: pointer;">Fullscreen</button>
+                </div>
+                <div style="flex: 1; margin-right: 20px;">
+                    <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 10px;">
+
+                    </div>
+                    <img src="/ElementGames-v4/media/discord/discord.webp" alt="Discord Icon" style="width: 30px;">
+                    <h3 style="margin: 0; font-size: 1.2em;">Join the Discord!</h3>
+                    <br>
+                    <p style="margin: 0;">Don't miss updates and stay connected if the site gets blocked!
+                        <br>(So you can get back if it gets blocked (discord doesent work on the chromebook))
+                    </p>
+                    <a href=" https://discord.gg/XUaXy5gEYN" target="_blank"> https://discord.gg/XUaXy5gEYN</a>
+                </div>
+                <div class="qrcode-container" style="position: relative; cursor: pointer;">
+                    <img src="/ElementGames-v4/media/discord/qrcode.png" alt="Discord QR Code"
+                        style="width: 120px; height: auto;">
+                    <button class="fullscreen-button"
+                        style="position: absolute; top: 10px; right: 10px; background-color: rgba(0, 0, 0, 0.5); color: white; padding: 5px 10px; border: none; border-radius: 5px; cursor: pointer;">Fullscreen</button>
+                </div>
+            </div>
+
+            <div id="fullscreenImage"
+                style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.9); z-index: 100; justify-content: center; align-items: center;">
+                <img src="/ElementGames-v4/media/discord/qrcode.png" alt="Discord QR Code"
+                    style="max-width: 90%; max-height: 90%;">
+                <button id="closeFullscreen"
+                    style="position: absolute; top: 20px; right: 20px; background-color: rgba(0, 0, 0, 0.5); color: white; padding: 5px 10px; border: none; border-radius: 5px; cursor: pointer;">Close</button>
+            </div>
+
+            <script>
+                const qrcodeContainers = document.querySelectorAll('.qrcode-container');
+                const fullscreenImage = document.getElementById('fullscreenImage');
+                const fullscreenImg = fullscreenImage.querySelector('img');
+                const closeFullscreen = document.getElementById('closeFullscreen');
+
+                qrcodeContainers.forEach(container => {
+                    container.addEventListener('click', () => {
+                        fullscreenImg.src = container.querySelector('img').src;
+                        fullscreenImage.style.display = 'flex';
+                    });
+                });
+
+                closeFullscreen.addEventListener('click', () => {
+                    fullscreenImage.style.display = 'none';
+                });
+            </script>
+            <input type="text" id="search-bar" class="search-bar" placeholder="Search for games..."
+                oninput="filterGames()">
+
+        </header>
+
+        <h2>Games and Tools</h2>
+        <section id="games">
+
+            <div class="game">
+                <img src="/ElementGames-v4/media/game-images/buckshot-multiplayer.png" alt="buckshot-multiplayer">
+                <h3>Buchshot Roulette (Multiplayer)</h3>
+                <button onclick="window.location.href='/ElementGames-v4/games/buckshot-multiplayer.html'">Play</button>
+            </div>
+            <div class="game">
+                <img src="/ElementGames-v4/media/game-images/superhot.png" alt="SUPERHOT">
+                <h3 style="color: rgb(255, 255, 255);">SUPER<span style="color: rgb(202, 0, 0);">HOT</span></h3>
+                <button onclick="window.location.href='/ElementGames-v4/games/superhot.html'">Play</button>
+            </div>
+            <div class="game">
+                <img src="/ElementGames-v4/media/game-images/mario.png" alt="mario icn">
+                <h3>Super Mario Bros 3</h3>
+                <button onclick="window.location.href='/ElementGames-v4/games/mario.html'">Play</button>
+            </div>
+            <div class="game">
+                <img src="/ElementGames-v4/media/game-images/apple-music.jpg" alt="apple Music">
+                <h3>Apple Music (Proxied)</h3>
+                <button onclick="window.open('https://cdn.mtdv.me/video/rick.mp4'); alert('sucker. im not adding that shat. u should have known. :). pay me $69 and ill add it');">Play</button>
+            </div>
+            <div class="game">
+                <img src="/ElementGames-v4/media/game-images/subway-surfers.png" alt="shubway shurfers">
+                <h3>Subway Surfers</h3>
+                <button onclick="window.location.href='/ElementGames-v4/games/subway-surfers.html'">Play</button>
+            </div>
+            <div class="game">
+                <img src="/ElementGames-v4/media/game-images/block-blast.jpg" alt="Block Blast">
+                <h3>Block Blast (Updated and Fixed)</h3>
+                <button onclick="window.location.href='/ElementGames-v4/games/block-blast.html'">Play</button>
+            </div>
+            <div class="game">
+                <img src="/ElementGames-v4/media/game-images/flappy-bird.jpg" alt="flap burd">
+                <h3>Flappy Bird</h3>
+                <button onclick="window.location.href='/ElementGames-v4/games/flappy-bird.html'">Play</button>
+            </div>
+            <div class="game">
+                <img src="/ElementGames-v4/media/game-images/btd5.webp" alt="btd5">
+                <h3>BTD5</h3>
+                <button onclick="window.location.href='/ElementGames-v4/games/btd5.html'">Play</button>
+            </div>
+            <div class="game">
+                <img src="/ElementGames-v4/media/game-images/jello-tetris.png" alt="gyatt">
+                <h3>Jello Tetrix</h3>
+                <button onclick="window.location.href='/ElementGames-v4/games/jello-tetris.html'">Play</button>
+            </div>
+            <div class="game">
+                <img src="/ElementGames-v4/media/game-images/drift-boss.png" alt="drift boss">
+                <h3>Drift Boss</h3>
+                <button onclick="window.location.href='/ElementGames-v4/games/drift-boss.html'">Play</button>
+            </div>
+            <div class="game">
+                <img src="/ElementGames-v4/media/game-images/buckshot.jpg" alt="Buckshot Roulette">
+                <h3>Buckshot Roulette</h3>
+                <button onclick="window.location.href='/ElementGames-v4/tools/buckshot.html'">Play</button>
+            </div>
+            <div class="game">
+                <img src="/ElementGames-v4/media/game-images/1v1-lol.png" alt="1v1-lol">
+                <h3>1v1.lol</h3>
+                <button onclick="window.location.href='/ElementGames-v4/games/1v1-lol.html'">Play</button>
+            </div>
+            <div class="game">
+                <img src="/ElementGames-v4/media/game-images/roblox.jpg" alt="roblox">
+                <h3>Roblox (Dev Testing)</h3>
+                <button onclick="window.location.href='/ElementGames-v4/tools/roblox.html'">Play</button>
+            </div>
+            <div class="game">
+                <img src="/ElementGames-v4/media/game-images/retro-bowl-college.png" alt="retro-bowl-college">
+                <h3>Retro Bowl Collage</h3>
+                <button onclick="window.location.href='/ElementGames-v4/games/retro-bowl-college.html'">Play</button>
+            </div>
+            <div class="game">
+                <img src="/ElementGames-v4/media/game-images/netflix.jpg" alt="netflix">
+                <h3>Netflix</h3>
+                <button onclick="window.location.href='/ElementGames-v4/tools/netflix.html'">Play</button>
+            </div>
+            <div class="game">
+                <img src="/ElementGames-v4/media/game-images/cookie-clicker.png" alt="cookie">
+                <h3>Cookie Clicker</h3>
+                <button onclick="window.location.href='/ElementGames-v4/games/cookie-clicker.html'">Play</button>
+            </div>
+            <div class="game">
+                <img src="/ElementGames-v4/media/game-images/chat.png" alt="dino">
+                <h3>Chat (Beta)</h3>
+                <button onclick="window.location.href='/ElementGames-v4/messages/index.html'">Open</button>
+            </div>
+            <div class="game">
+                <img src="/ElementGames-v4/media/game-images/dino.png" alt="dino">
+                <h3>Chrome Dino</h3>
+                <button onclick="window.location.href='/ElementGames-v4/games/chrome-dino.html'">Play</button>
+            </div>
+            <div class="game">
+                <img src="/ElementGames-v4/media/game-images/crash.png" alt="crash">
+                <h3>Crash Chrome</h3>
+                <button onclick="window.location.href='/ElementGames-v4/tools/crash.html'">Play</button>
+            </div>
+            <div class="game">
+                <img src="/ElementGames-v4/media/game-images/stickman-hook.jpg" alt="stookmanhook">
+                <h3>Stickman Hook (FIXED)</h3>
+                <button onclick="window.location.href='/ElementGames-v4/games/stickman-hook.html'">Play</button>
+            </div>
+            <div class="game">
+                <img src="/ElementGames-v4/media/game-images/slither-io.png" alt="slither">
+                <h3>Slither.io</h3>
+                <button onclick="window.location.href='/ElementGames-v4/games/slither-io.html'">Play</button>
+            </div>
+            <div class="game">
+                <img src="/ElementGames-v4/media/game-images/chat-gpt.jpg" alt="chetgpt">
+                <h3>Chat GPT</h3>
+                <button onclick="window.location.href='/ElementGames-v4/tools/chat-gpt.html'">Play</button>
+            </div>
+            <div class="game">
+                <img src="/ElementGames-v4/media/game-images/minecraft-ai.jpg" alt="aicraft">
+                <h3>AI Minecraft</h3>
+                <button onclick="window.location.href='/ElementGames-v4/tools/ai-minecraft.html'">Play</button>
+            </div>
+            <div class="game">
+                <img src="/ElementGames-v4/media/game-images/crossy-road.png" alt="crossy road">
+                <h3>Crossy Road</h3>
+                <button onclick="window.location.href='/ElementGames-v4/games/crossy-road.html'">Play</button>
+            </div>
+            <div class="game">
+                <img src="/ElementGames-v4/media/game-images/pool.jpg" alt="pool">
+                <h3>Pool</h3>
+                <button onclick="window.location.href='/ElementGames-v4/games/pool.html'">Play</button>
+            </div>
+            <div class="game">
+                <img src="/ElementGames-v4/media/game-images/pacman.jpg" alt="Pacman">
+                <h3>Pacman</h3>
+                <button onclick="window.location.href='/ElementGames-v4/games/pacman.html'">Play</button>
+            </div>
+            <div class="game">
+                <img src="/ElementGames-v4/media/game-images/clash.jpg" alt="Clash">
+                <h3>Clash Royale</h3>
+                <button onclick="window.location.href='/ElementGames-v4/games/clash-royale.html'">Play</button>
+            </div>
+            <div class="game">
+                <img src="/ElementGames-v4/media/game-images/soccer-random.jpg" alt="Soccor Random">
+                <h3>Soccer Random</h3>
+                <button onclick="window.location.href='/ElementGames-v4/games/soccer-random.html'">Play</button>
+            </div>
+            <div class="game">
+                <img src="/ElementGames-v4/media/game-images/boxing-random.jpg" alt="Boxing Random">
+                <h3>Boxing Random</h3>
+                <button onclick="window.location.href='/ElementGames-v4/games/boxing-random.html'">Play</button>
+            </div>
+            <div class="game">
+                <img src="/ElementGames-v4/media/game-images/snake.png" alt="Snake">
+                <h3>Google Snake</h3>
+                <button onclick="window.location.href='/ElementGames-v4/games/snake.html'">Play</button>
+            </div>
+            <div class="game">
+                <img src="/ElementGames-v4/media/game-images/google-messages.png" alt="Moto X3M">
+                <h3>Google Messages</h3>
+                <button onclick="window.location.href='/ElementGames-v4/tools/google-messages.html'">Play</button>
+            </div>
+            <div class="game">
+                <img src="/ElementGames-v4/media/game-images/yt-music.png" alt="Moto X3M">
+                <h3>Youtube Music (A better Spotify)</h3>
+                <button onclick="window.location.href='/ElementGames-v4/tools/yt-music.html'">Play</button>
+            </div>
+            <div class="game">
+                <img src="/ElementGames-v4/media/game-images/moto-x3m.jpg" alt="Moto X3M">
+                <h3>Moto X3M (All Maps)</h3>
+                <button onclick="window.location.href='/ElementGames-v4/games/moto-x3m.html'">Play</button>
+            </div>
+            <div class="game">
+                <img src="/ElementGames-v4/media/game-images/tuts-platformer.webp" alt="Tut's Platformer">
+                <h3>Tut's Platformer</h3>
+                <button onclick="window.location.href='/ElementGames-v4/games/tuts-platformer.html'">Play</button>
+            </div>
+            <div class="game">
+                <img src="/ElementGames-v4/media/game-images/minecraft.jpg" alt="Minecraft">
+                <h3>Minecraft</h3>
+                <button onclick="window.location.href='/ElementGames-v4/games/minecraft.html'">Play</button>
+            </div>
+            <div class="game">
+                <img src="/ElementGames-v4/media/game-images/retro-bowl.png" alt="Retro Bowl">
+                <h3>Retro Bowl</h3>
+                <button onclick="window.location.href='/ElementGames-v4/games/retro-bowl.html'">Play</button>
+            </div>
+            <div class="game">
+                <img src="/ElementGames-v4/media/game-images/paper-io.jpg" alt="Paper.io 2">
+                <h3>Paper.io 2</h3>
+                <button onclick="window.location.href='/ElementGames-v4/games/paper-io.html'">Play</button>
+            </div>
+            <div class="game">
+                <img src="/ElementGames-v4/media/game-images/rocket-lueage.jpg" alt="rocket-lueage">
+                <h3>Rocket League</h3>
+                <button onclick="window.location.href='/ElementGames-v4/games/rocket-lueage.html'">Play</button>
+            </div>
+            <div class="game">
+                <img src="/ElementGames-v4/media/game-images/basketball-random.png" alt="Basketball Random">
+                <h3>Basketball Random</h3>
+                <button onclick="window.location.href='/ElementGames-v4/games/basket-random.html'">Play</button>
+            </div>
+            <div class="game">
+                <img src="/ElementGames-v4/media/game-images/geometry-dash.jpg" alt="name">
+                <h3>Geometry Dash</h3>
+                <button onclick="window.location.href='/ElementGames-v4/games/geometry-dash.html'">Play</button>
+            </div>
+            <div class="game">
+                <img src="/ElementGames-v4/media/game-images/tetris.png" alt="Tetris">
+                <h3>Tetris</h3>
+                <button onclick="window.location.href='/ElementGames-v4/games/tetris.html'">Play</button>
+            </div>
+
+            <!-- Add more games as needed -->
+        </section>
+
+        <section id="changelog">
+            <h2>Update Changelog</h2>
+            <ul>
+
+                <li>Version 4.9.9.9.9.9.9: Added Game: Buckshot Multiplayer</li>
+
+                <li>Version 4.9.9.9.9.9: screw it im not doing anything cool for v5 soo if u have any ideas tell me</li>
+
+                <li>Version 4.8.2: i added some stuff but i have no motivation</li>
+
+                <li>Version 4.8: Missed a few updates but heres a recap: Added Games: 1v1.lol, Buckshot Roulette, Smash
+                    Karts. I might remove roblox and discontinue the project.</li>
+
+                <li>Version 4.7.5: Fixed Cookie Clicker Leaderboard (i missed a few updates :\)</li>
+
+                <li>Version 4.7.2: Updated: Chat(backend), Cookie Clicker (Backend) Added Tools/Games: Retro Bowl
+                    Collage, Netflix, Chat</li>
+
+                <li>Version 4.6: Updated Stickman Hook and Cookie Clicker logic + leaderboards.</li>
+
+                <li>Version 4.5.5: Added Games: Ai Minecraft, Cookie Clicker, Chat GPT, and fixed Slither.io</li>
+
+                <li>Version 4.5: added crossy road but i cant add roblox sorry</li>
+
+                <li>Version 4.4.8: its 11:13 rn and i just finished adding pool and im about to crash out but i wana add
+                    trash of clans first :(</li>
+
+                <li>Version 4.3.2: Added multiple games and fixed scroll issues reported on some pages</li>
+
+                <li>Version 4.2.5: Bug fixes, feedback paage added, added game: Block Blast, Google Snake</li>
+
+                <li>Version 4.1.2: Various bug fixes. More features coming in the next update.</li>
+
+                <li>Version 4.0: Initial release with home page setup.</li>
+                <!-- Add past updates here -->
+            </ul>
+        </section>
+    </div>
+
+    <div id="iframeContainer">
+        <iframe src="/ElementGames-v4/admin/client.html"
+            style="position: fixed; bottom: 0px; right: 0px; height: 40px; width: 300px; border: none; "
+            title="hi"></iframe>
+
+        <script>
+            // Function to handle messages from the iframe
+            function handleMessage(event) {
+                if (event.origin !== window.location.origin) {
+                    return; // Ignore messages from unknown origins
+                }
+
+                const message = event.data;
+
+                if (message.type === 'redirect') {
+                    window.location.href = message.url;
+                }
+            }
+
+            // Add event listener for messages from the iframe
+            window.addEventListener('message', handleMessage, false);
+        </script>
+
+        <script>
+            // Function to filter games based on the search input
+            function filterGames() {
+                const searchQuery = document.getElementById("search-bar").value.toLowerCase();
+                const games = document.querySelectorAll(".game");
+
+                games.forEach(game => {
+                    const gameName = game.querySelector("h3").textContent.toLowerCase();
+                    if (gameName.includes(searchQuery)) {
+                        game.style.display = "flex";
+                    } else {
+                        game.style.display = "none";
+                    }
+                });
+            }
+        </script>
+
+        <script src="/ElementGames-v4/navbar.js" type="module"></script>
+        <script src="/ElementGames-v4/authCheck.js" type="module"></script>
+</body>
+
+</html>

@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>API Request Example</title>
+    <style>
+        /* Simple styling */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .container {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        .popup {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .popup.show {
+            display: block;
+        }
+
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        input[type="text"] {
+            padding: 10px;
+            font-size: 16px;
+            margin-bottom: 10px;
+            width: 100%;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+        <h2>Login API Request</h2>
+        <input type="text" id="email" placeholder="Enter your email" />
+        <button onclick="sendInitialRequest()">Submit</button>
+    </div>
+
+    <div id="popup" class="popup">
+        <h3>Enter the Code</h3>
+        <input type="text" id="code" placeholder="Enter the code" />
+        <button onclick="sendCodeRequest()">Submit Code</button>
+    </div>
+
+    <script>
+        async function sendInitialRequest() {
+            const email = document.getElementById('email').value;
+
+            if (!email) {
+                alert("Please enter an email.");
+                return;
+            }
+
+            try {
+                const response = await fetch('https://prankhotline.com/api/?a=login', {
+                    method: 'POST',
+                    headers: {
+                        accept: '*/*',
+                        'accept-language': 'en-US,en;q=0.9,zh-CN;q=0.8,zh;q=0.7',
+                        'content-type': 'application/x-www-form-urlencoded; charset=UTF-8',
+                        cookie: 'PHPSESSID=bp6imkpee3lajb9mgqair6tmt2; welcome_state=2; _gid=GA1.2.1732625856.1730861066; G_ENABLED_IDPS=google; __stripe_sid=5c188cdb-0d14-4ca0-8c35-dbcebdb94d6961b1ea; __stripe_mid=3a524085-ae70-436a-80d3-6245012c6362817a52; _gat=1; _ga_SWS3SLNZ6K=GS1.1.1730861065.1.1.1730861437.0.0.0; _ga=GA1.2.408597515.1730861066',
+                        dnt: '1',
+                        origin: 'https://prankhotline.com',
+                        priority: 'u=1, i',
+                        'sec-ch-ua': '"Chromium";v="130", "Google Chrome";v="130", "Not?A_Brand";v="99"',
+                        'sec-ch-ua-mobile': '?0',
+                        'sec-ch-ua-platform': '"Windows"',
+                        'sec-fetch-dest': 'empty',
+                        'sec-fetch-mode': 'cors',
+                        'sec-fetch-site': 'same-origin',
+                        'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36',
+                        'x-requested-with': 'XMLHttpRequest'
+                    },
+                    body: `email=${encodeURIComponent(email)}&pass=&type=email&access_token=`
+                });
+
+                if (response.ok) {
+                    document.getElementById('popup').classList.add('show');
+                } else {
+                    alert("Initial request failed.");
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert("An error occurred during the initial request.");
+            }
+        }
+
+        async function sendCodeRequest() {
+            const email = document.getElementById('email').value;
+            const code = document.getElementById('code').value;
+
+            if (!code) {
+                alert("Please enter the code.");
+                return;
+            }
+
+            try {
+                const response = await fetch('https://prankhotline.com/api/?a=login', {
+                    method: 'POST',
+                    headers: {
+                        'accept': '*/*',
+                        'accept-language': 'en-US,en;q=0.9,zh-CN;q=0.8,zh;q=0.7',
+                        'content-type': 'application/x-www-form-urlencoded; charset=UTF-8',
+                        'cookie': 'PHPSESSID=bp6imkpee3lajb9mgqair6tmt2; welcome_state=2; _gid=GA1.2.1732625856.1730861066; G_ENABLED_IDPS=google; __stripe_sid=5c188cdb-0d14-4ca0-8c35-dbcebdb94d6961b1ea; __stripe_mid=3a524085-ae70-436a-80d3-6245012c6362817a52; _gat=1; _ga_SWS3SLNZ6K=GS1.1.1730861065.1.1.1730861437.0.0.0; _ga=GA1.2.408597515.1730861066',
+                        'dnt': '1',
+                        'origin': 'https://prankhotline.com',
+                        'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36',
+                        'x-requested-with': 'XMLHttpRequest'
+                    },
+                    body: `email=${encodeURIComponent(email)}&pass=${encodeURIComponent(code)}&type=email&access_token=`
+                });
+
+                if (response.ok) {
+                    alert("Code verified successfully.");
+                    document.getElementById('popup').classList.remove('show');
+                } else {
+                    alert("Code verification failed.");
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert("An error occurred during the code verification request.");
+            }
+        }
+    </script>
+
+</body>
+
+</html>

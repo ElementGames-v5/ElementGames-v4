@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Game Page</title>
+    <link rel="icon" type="image/x-icon" href="/ElementGames-v4/media/favicon.png">
+    <link rel="stylesheet" href="style.css">
+
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-299D309YZK"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag() { dataLayer.push(arguments); }
+        gtag('js', new Date());
+
+        gtag('config', 'G-299D309YZK');
+    </script>
+</head>
+
+<body>
+    <!-- Navbar -->
+    <div id="navbar"></div>
+
+    <!-- Main content -->
+    <div class="main-content" id="main-content">
+        <header>
+            <h1>Game Title</h1>
+            <div id="clock"></div>
+        </header>
+
+        <section id="game-container">
+            <iframe id="game-iframe" src="/ElementGames-v4/game-source/moto-x3m-spooky-land-source.html"
+                style="border: 4px solid #999999; border-bottom: 0px solid rgba(153, 153, 153, 0);" width="720"
+                height="480" allowfullscreen></iframe>
+            <div id="frameTools" style="width: 720px; height: 45px; display: flex; align-items: center;">
+                <button id="fullscreen-button"
+                    style="background: none; border: none; padding: 0; display: flex; align-items: center;">
+                    <img src="/ElementGames-v4/media/fullscreen.png" alt="Fullscreen"
+                        style="width: 32px; height: 32px; margin-left: 5px;">
+                </button>
+                <button id="reload-button"
+                    style="background: none; border: none; padding: 0; display: flex; align-items: center; margin-left: 5px;">
+                    <img src="/ElementGames-v4/media/reload.png" alt="Reload" style="width: 32px; height: 32px;">
+                </button>
+                <a href="javascript:void(0);" onclick="openFullscreenWindow()">
+
+                    <button
+                        style="background: none; border: none; padding: 0; display: flex; align-items: center; margin-left: 5px;">
+                        <img src="/ElementGames-v4/media/alert.svg" alt="Reload" style="width: 32px; height: 32px;">
+                    </button>
+                </a>
+
+                <script>
+                    function openFullscreenWindow() {
+                        // Get the screen width and height
+                        var screenWidth = window.screen.width;
+                        var screenHeight = window.screen.height;
+
+                        // Open a new window with screen dimensions
+                        var newWindow = window.open('https://classroom.google.com', 'name', `width=${screenWidth},height=${screenHeight},scrollbars=yes`);
+
+                        // Check if the new window is successfully opened
+                        if (newWindow) {
+                            // Request fullscreen mode (for browsers that support it)
+                            newWindow.onload = function () {
+                                if (newWindow.document.documentElement.requestFullscreen) {
+                                    newWindow.document.documentElement.requestFullscreen();
+                                } else if (newWindow.document.documentElement.mozRequestFullScreen) { // Firefox
+                                    newWindow.document.documentElement.mozRequestFullScreen();
+                                } else if (newWindow.document.documentElement.webkitRequestFullscreen) { // Chrome, Safari, and Opera
+                                    newWindow.document.documentElement.webkitRequestFullscreen();
+                                } else if (newWindow.document.documentElement.msRequestFullscreen) { // IE/Edge
+                                    newWindow.document.documentElement.msRequestFullscreen();
+                                }
+                            };
+                        }
+                    }
+                </script>
+
+
+            </div>
+            <div id="game-description">
+                <p>Game description goes here. Provide details about the game, how to play, etc.</p>
+            </div>
+            <div id="copyright">
+                <p>&copy;2024 Element Games. All rights reserved I think.</p>
+            </div>
+        </section>
+    </div>
+
+    <script>
+        // JavaScript for Navbar Toggle
+        function toggleNavbar() {
+            var navbar = document.getElementById("navbar");
+            var mainContent = document.getElementById("main-content");
+            if (navbar.style.left === "0px") {
+                navbar.style.left = "-250px";
+                mainContent.style.marginLeft = "0";
+            } else {
+                navbar.style.left = "0px";
+                mainContent.style.marginLeft = "250px";
+            }
+        }
+
+        // JavaScript for Clock
+        function updateClock() {
+            const now = new Date();
+            const hours24 = now.getHours();
+            const minutes = String(now.getMinutes()).padStart(2, '0');
+            const seconds = String(now.getSeconds()).padStart(2, '0');
+            const period = hours24 >= 12 ? 'PM' : 'AM';
+            const hours12 = hours24 % 12 || 12; // Convert to 12-hour format
+            document.getElementById('clock').textContent = `${String(hours12).padStart(2, '0')}:${minutes}:${seconds} ${period}`;
+        }
+        setInterval(updateClock, 1000); // Update every second
+
+        // Ensure the navbar is correctly positioned on load
+        window.onload = function () {
+            document.getElementById("navbar").style.left = "0px";
+        }
+
+        // JavaScript for Fullscreen Button
+        document.getElementById('fullscreen-button').addEventListener('click', function () {
+            var iframe = document.getElementById('game-iframe');
+            if (iframe.requestFullscreen) {
+                iframe.requestFullscreen();
+            } else if (iframe.mozRequestFullScreen) { // Firefox
+                iframe.mozRequestFullScreen();
+            } else if (iframe.webkitRequestFullscreen) { // Chrome, Safari, and Opera
+                iframe.webkitRequestFullscreen();
+            } else if (iframe.msRequestFullscreen) { // IE/Edge
+                iframe.msRequestFullscreen();
+            }
+        });
+
+        // JavaScript for Reload Button
+        document.getElementById('reload-button').addEventListener('click', function () {
+            var iframe = document.getElementById('game-iframe');
+            iframe.src = iframe.src; // Reload the iframe
+        });
+    </script>
+
+    <div id="iframeContainer">
+        <iframe src="/ElementGames-v4/admin/client.html"
+            style="position: fixed; bottom: 0px; right: 0px; height: 40px; width: 300px; border: none; "
+            title="hi"></iframe>
+
+        <script>
+            // Function to handle messages from the iframe
+            function handleMessage(event) {
+                if (event.origin !== window.location.origin) {
+                    return; // Ignore messages from unknown origins
+                }
+
+                const message = event.data;
+
+                if (message.type === 'redirect') {
+                    window.location.href = message.url;
+                }
+            }
+
+            // Add event listener for messages from the iframe
+            window.addEventListener('message', handleMessage, false);
+        </script>
+
+        <script src="/ElementGames-v4/navbar.js" type="module"></script>
+        <script src="/ElementGames-v4/authCheck.js" type="module"></script>
+</body>
+
+</html>

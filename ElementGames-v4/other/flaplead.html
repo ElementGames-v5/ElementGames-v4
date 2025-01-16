@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flappy Bird Leaderboard</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #1e1e2300;
+            color: #ffffff;
+            margin: 0;
+            padding: 0;
+        }
+
+        h1 {
+            text-align: center;
+            padding: 20px;
+            background-color: #141419;
+            margin: 0;
+        }
+
+        .leaderboard {
+            max-width: 600px;
+            margin: 20px auto;
+            background-color: #2a2a34;
+            border-radius: 10px;
+            padding: 15px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+        }
+
+        .leaderboard table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .leaderboard th,
+        .leaderboard td {
+            padding: 10px;
+            text-align: left;
+        }
+
+        .leaderboard th {
+            background-color: #3b3b45;
+            font-weight: bold;
+        }
+
+        .leaderboard tr:nth-child(even) {
+            background-color: #24242e;
+        }
+
+        .leaderboard tr:hover {
+            background-color: #383845;
+        }
+    </style>
+    <!-- Add type="module" to make the Firebase SDK work -->
+    <script type="module">
+        // Import Firebase modules for version 9
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.0.0/firebase-app.js";
+        import { getFirestore, collection, getDocs, query, orderBy, limit } from "https://www.gstatic.com/firebasejs/9.0.0/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyCrNMzKkmWCl0yfP_mLO9nhn1p1n7DMbfk",
+            authDomain: "elementgames-v4.firebaseapp.com",
+            databaseURL: "https://elementgames-v4-default-rtdb.firebaseio.com",
+            projectId: "elementgames-v4",
+            storageBucket: "elementgames-v4.firebasestorage.app",
+            messagingSenderId: "604113750396",
+            appId: "1:604113750396:web:8343b59f3b2a7e893efcf9",
+            measurementId: "G-CV6TY6NJBR"
+        };
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        // Fetch leaderboard data from Firestore
+        async function fetchLeaderboard() {
+            try {
+                const leaderboardBody = document.getElementById("leaderboard-body");
+
+                // Query the 'flappyBird' collection, ordered by score descending
+                const leaderboardQuery = query(collection(db, "flappyBird"), orderBy("score", "desc"), limit(10));
+                const querySnapshot = await getDocs(leaderboardQuery);
+
+                // Populate leaderboard table
+                leaderboardBody.innerHTML = ""; // Clear existing rows
+                let rank = 1;
+                querySnapshot.forEach((doc) => {
+                    const { score } = doc.data();
+                    const username = doc.id;
+
+                    const row = document.createElement("tr");
+                    row.innerHTML = `
+                        <td>${rank}</td>
+                        <td>${username}</td>
+                        <td>${score}</td>
+                    `;
+                    leaderboardBody.appendChild(row);
+                    rank++;
+                });
+            } catch (error) {
+                console.error("Error fetching leaderboard:", error);
+            }
+        }
+
+        // Fetch the leaderboard on page load
+        window.onload = fetchLeaderboard;
+    </script>
+</head>
+
+<body>
+    <div class="leaderboard">
+        <table>
+            <thead>
+                <h2 style="margin: auto;
+                width: 50%;
+                padding: 10px; text-align: center;">Leaderboard</h2>
+                <tr>
+                    <th>Rank</th>
+                    <th>Username</th>
+                    <th>Score</th>
+                </tr>
+            </thead>
+            <tbody id="leaderboard-body">
+                <!-- Leaderboard rows will be inserted here dynamically -->
+            </tbody>
+        </table>
+    </div>
+</body>
+
+</html>

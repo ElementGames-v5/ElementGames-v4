@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign Up - Element Games</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        /* Reset and base styling */
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background-color: #141419;
+            color: #fff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .container {
+            background-color: #1e1e23;
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            max-width: 400px;
+            width: 100%;
+            text-align: center;
+        }
+
+        h1 {
+            margin-bottom: 1rem;
+            font-size: 2rem;
+            color: #e0e0e0;
+        }
+
+        label {
+            display: block;
+            margin: 0.5rem 0 0.2rem;
+            font-size: 1rem;
+            color: #e0e0e0;
+            text-align: left;
+        }
+
+        input[type="text"], input[type="email"], input[type="password"] {
+            width: 94%;
+            padding: 0.75rem;
+            margin-bottom: 1rem;
+            border: 1px solid #444;
+            border-radius: 5px;
+            background-color: #2e2e35;
+            color: #fff;
+            font-size: 1rem;
+            outline: none;
+        }
+
+        input[type="text"]:focus, input[type="email"]:focus, input[type="password"]:focus {
+            border-color: #6e6e76;
+            box-shadow: 0 0 5px rgba(110, 110, 118, 0.5);
+        }
+
+        button {
+            background-color: #4a90e2;
+            color: #fff;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            background-color: #357abd;
+        }
+
+        #error-message {
+            color: #e74c3c;
+            margin-top: 1rem;
+            font-size: 0.875rem;
+        }
+
+        a {
+            color: #4a90e2;
+            text-decoration: none;
+            font-size: 0.875rem;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+    </style>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-299D309YZK"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag() { dataLayer.push(arguments); }
+        gtag('js', new Date());
+        gtag('config', 'G-299D309YZK');
+    </script>
+</head>
+
+<body>
+    <div class="container">
+        <h1>Sign Up</h1>
+        <form id="signup-form">
+            <label for="username">First and Last Name:</label>
+            <input type="text" id="name" required>
+            <p>Please use your real name. Your name will only be used for verification.</p>
+            <label for="username">Username:</label>
+            <input type="text" id="username" required>
+            <p>Your username will be dispayed in games with leaderboards.</p>
+            <label for="email">Email:</label>
+            <input type="email" id="email" required>
+            <label for="password">Password:</label>
+            <input type="password" id="password" required>
+            <button type="submit">Sign Up</button>
+            <p id="error-message"></p>
+        </form>
+        <p><a href="login.html">Already have an account? Log in here.</a></p>
+    </div>
+
+    <script type="module">
+        import { getAuth, createUserWithEmailAndPassword } from 'https://www.gstatic.com/firebasejs/10.12.4/firebase-auth.js';
+        import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.4/firebase-app.js';
+        import { getFirestore, doc, setDoc, getDoc } from 'https://www.gstatic.com/firebasejs/10.12.4/firebase-firestore.js';
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyCrNMzKkmWCl0yfP_mLO9nhn1p1n7DMbfk",
+            authDomain: "elementgames-v4.firebaseapp.com",
+            projectId: "elementgames-v4",
+            storageBucket: "elementgames-v4.appspot.com",
+            messagingSenderId: "604113750396",
+            appId: "1:604113750396:web:8343b59f3b2a7e893efcf9",
+            measurementId: "G-CV6TY6NJBR"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+        async function isUsernameTaken(username) {
+            const userDoc = await getDoc(doc(db, "usernames", username));
+            return userDoc.exists();
+        }
+
+        const form = document.getElementById('signup-form');
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const name = document.getElementById('name').value;
+            const username = document.getElementById('username').value;
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+
+            try {
+                if (await isUsernameTaken(username)) {
+                    document.getElementById('error-message').textContent = 'Username is already taken. Please choose another one.';
+                    return;
+                }
+
+                const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+                const user = userCredential.user;
+
+                // Store additional user data in Firestore
+                await setDoc(doc(db, "users", user.uid), {
+                    name: name,
+                    username: username,
+                    email: email
+                });
+
+                // Store username in a separate collection to ensure uniqueness
+                await setDoc(doc(db, "usernames", username), { uid: user.uid });
+
+                // Redirect to login page or home page
+                window.location.href = 'login.html'; // Or 'index.html'
+            } catch (error) {
+                console.error('Error signing up: ', error);
+                document.getElementById('error-message').textContent = `Error: ${error.message}`;
+            }
+        });
+    </script>
+</body>
+
+</html>

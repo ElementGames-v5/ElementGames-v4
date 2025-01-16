@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>New Chat</title>
+    <style>
+        html,
+        body {
+            height: 100%;
+            margin: 0;
+            overflow: hidden;
+        }
+
+        body {
+            background-color: #171717;
+            font-family: sans-serif;
+        }
+
+        .container {
+            display: flex;
+            width: 100vw;
+            height: 100vh;
+            max-width: 100%;
+            box-sizing: border-box;
+        }
+
+        .sidebar {
+            width: 250px;
+            background-color: #1f1f1f;
+            padding: 20px;
+            height: 100%;
+            box-sizing: border-box;
+        }
+
+        .sidebar .new-chat-button {
+            background-color: #2a2a2a;
+            color: white;
+            border: none;
+            border-radius: 20px;
+            padding: 10px 15px;
+            cursor: pointer;
+            width: 100%;
+            margin-bottom: 20px;
+        }
+
+        .sidebar .search {
+            background-color: #2a2a2a;
+            border-radius: 20px;
+            padding: 10px;
+            margin-bottom: 20px;
+        }
+
+        .sidebar input[type="text"] {
+            background-color: transparent;
+            border: none;
+            color: white;
+            width: calc(100% - 100px);
+            /* Adjust width to accommodate button */
+            margin-right: 10px;
+            /* Add space between input and button */
+        }
+
+        .sidebar .search button {
+            /* Style the search button */
+            background-color: #2271d7;
+            color: white;
+            border: none;
+            border-radius: 20px;
+            padding: 10px 15px;
+            cursor: pointer;
+            width: 90px;
+            /* Adjust width as needed */
+        }
+
+        .sidebar .conversation p {
+            margin-bottom: 15px;
+            color: white;
+            cursor: pointer;
+        }
+
+        .message-thread {
+            flex: 1;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            box-sizing: border-box;
+        }
+
+        .message-area {
+            flex: 1;
+        }
+
+        .message {
+            margin-bottom: 15px;
+        }
+
+        .sent {
+            text-align: right;
+        }
+
+        .sent .bubble {
+            background-color: #2271d7;
+            color: white;
+            border-radius: 10px;
+            padding: 10px;
+            display: inline-block;
+        }
+
+        .received .bubble {
+            background-color: #202124;
+            color: white;
+            border-radius: 10px;
+            padding: 10px;
+            display: inline-block;
+        }
+
+        .time {
+            font-size: 12px;
+            color: #888;
+            margin-top: 5px;
+        }
+
+        .image {
+            max-width: 200px;
+            border-radius: 10px;
+        }
+
+        .input-area {
+            display: flex;
+            align-items: center;
+            padding-top: 10px;
+        }
+
+        .input-area input[type="text"] {
+            flex: 1;
+            background-color: #2a2a2a;
+            border: none;
+            border-radius: 20px;
+            padding: 10px;
+            color: white;
+            margin-right: 10px;
+        }
+
+        .input-area button {
+            background-color: #2271d7;
+            color: white;
+            border: none;
+            border-radius: 20px;
+            padding: 10px 15px;
+            cursor: pointer;
+        }
+    </style>
+    <script src="https://www.gstatic.com/firebasejs/9.6.8/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.8/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.8/firebase-auth-compat.js"></script>
+    <script>
+        const firebaseConfig = {
+            apiKey: "AIzaSyCrNMzKkmWCl0yfP_mLO9nhn1p1n7DMbfk",
+            authDomain: "elementgames-v4.firebaseapp.com",
+            projectId: "elementgames-v4",
+            storageBucket: "elementgames-v4.appspot.com",
+            messagingSenderId: "604113750396",
+            appId: "1:604113750396:web:8343b59f3b2a7e893efcf9",
+            measurementId: "G-CV6TY6NJBR"
+        };
+        firebase.initializeApp(firebaseConfig);
+    </script>
+</head>
+
+<body>
+    <div class="chat-container" style="background-color: #181818; color: #eee; font-family: sans-serif; display: flex; height: 500px;">
+        <div class="user-search" style="width: 200px; padding: 10px; border-right: 1px solid #333;">
+            <input type="text" id="userSearchInput" placeholder="Search for a user" style="width: 100%; padding: 8px; margin-bottom: 10px; background-color: #282828; color: #eee; border: 1px solid #333; border-radius: 4px;">
+            <button id="userSearchBtn" style="width: 100%; padding: 8px; background-color: #007bff; color: #fff; border: none; border-radius: 4px; cursor: pointer;">Search</button>
+            <div id="userList" style="margin-top: 10px; overflow-y: auto;"></div> 
+        </div>
+        <div class="chat-window" style="flex-grow: 1; padding: 10px;">
+            <div id="messageList" style="height: 400px; overflow-y: auto; padding: 10px; border: 1px solid #333; border-radius: 4px;"></div>
+            <input type="text" id="messageInput" placeholder="Type a message" style="width: calc(100% - 80px); padding: 8px; margin-top: 10px; background-color: #282828; color: #eee; border: 1px solid #333; border-radius: 4px;">
+            <button id="sendMessageBtn" style="width: 70px; padding: 8px; margin-left: 10px; background-color: #007bff; color: #fff; border: none; border-radius: 4px; cursor: pointer;">Send</button>
+        </div>
+    </div>
+    <script scr="script.js"></script>
+</body>
+
+</html>

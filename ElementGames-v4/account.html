@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-299D309YZK"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag() { dataLayer.push(arguments); }
+        gtag('js', new Date());
+        gtag('config', 'G-299D309YZK');
+    </script>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Profile - Element Games</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #141419;
+            color: #fff;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            width: 80%;
+            max-width: 800px;
+            margin: auto;
+            background-color: #1e1e23;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            margin-top: 50px;
+        }
+
+        .container button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            background-color: #ff00007c;
+            color: #fff;
+            cursor: pointer;
+            font-size: 1em;
+        }
+
+        .container button:hover {
+            background-color: #ff0000e0;
+        }
+
+        header {
+            text-align: center;
+            background-color: #0057b300;
+            padding: 20px;
+            border-radius: 8px 8px 0 0;
+        }
+
+        h1 {
+            margin: 0;
+            font-size: 2em;
+        }
+
+        .info-section {
+            margin-top: 20px;
+        }
+
+        .info-section label {
+            display: block;
+            margin: 10px 0 5px;
+        }
+
+        .info-section input {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 10px;
+            border-radius: 4px;
+            border: 1px solid #333;
+            background-color: #1e1e23;
+            color: #fff;
+        }
+
+        .info-section button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            background-color: #007bff;
+            color: #fff;
+            cursor: pointer;
+            font-size: 1em;
+        }
+
+        .info-section button:hover {
+            background-color: #0056b3;
+        }
+
+        .info-section .toggle-button {
+            background-color: #28a745;
+        }
+
+        .info-section .toggle-button:hover {
+            background-color: #1e7e34;
+        }
+
+        .info-section .error-message {
+            color: #e74c3c;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <header>
+            <h1>Account Settings</h1>
+        </header>
+
+        <div class="info-section">
+            <label for="username">Username:</label>
+            <input type="text" id="username" disabled>
+
+            <label for="email">Email:</label>
+            <input type="email" id="email" disabled>
+
+            <label for="password">Password:</label>
+            <input type="password" id="password" disabled>
+            <button id="toggle-password" class="toggle-button">Show Password</button>
+
+            <button id="reset-password">Reset Password</button>
+
+            <p id="error-message" class="error-message"></p>
+        </div>
+        <button id="logout-button">Log Out</button><br><br>
+        <a href="/ElementGames-v4/index.html" class="button">Return Home</a>
+    </div>
+
+    <script type="module">
+        import { getAuth, onAuthStateChanged, signOut, sendPasswordResetEmail } from 'https://www.gstatic.com/firebasejs/10.12.4/firebase-auth.js';
+        import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.4/firebase-app.js';
+        import { getFirestore, doc, getDoc } from 'https://www.gstatic.com/firebasejs/10.12.4/firebase-firestore.js';
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyCrNMzKkmWCl0yfP_mLO9nhn1p1n7DMbfk",
+            authDomain: "elementgames-v4.firebaseapp.com",
+            projectId: "elementgames-v4",
+            storageBucket: "elementgames-v4.appspot.com",
+            messagingSenderId: "604113750396",
+            appId: "1:604113750396:web:8343b59f3b2a7e893efcf9",
+            measurementId: "G-CV6TY6NJBR"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+        // Function to log out the user
+        function logout() {
+            signOut(auth).then(() => {
+                window.location.href = 'login.html'; // Redirect to login page
+            }).catch((error) => {
+                console.error('Error signing out: ', error);
+            });
+        }
+
+        // Function to reset the user's password
+        async function resetPassword() {
+            const email = document.getElementById('email').value;
+            try {
+                await sendPasswordResetEmail(auth, email);
+                document.getElementById('error-message').textContent = 'Password reset email sent!';
+            } catch (error) {
+                document.getElementById('error-message').textContent = `Error: ${error.message}`;
+            }
+        }
+
+        // Function to toggle password visibility
+        function togglePassword() {
+            const passwordField = document.getElementById('password');
+            const toggleButton = document.getElementById('toggle-password');
+            if (passwordField.type === 'password') {
+                passwordField.type = 'text';
+                toggleButton.textContent = 'Hide Password';
+            } else {
+                passwordField.type = 'password';
+                toggleButton.textContent = 'Show Password';
+            }
+        }
+
+        // Add event listeners
+        document.getElementById('logout-button').addEventListener('click', logout);
+        document.getElementById('reset-password').addEventListener('click', resetPassword);
+        document.getElementById('toggle-password').addEventListener('click', togglePassword);
+
+        // Retrieve and display user's details
+        onAuthStateChanged(auth, async (user) => {
+            if (user) {
+                const userDoc = doc(db, "users", user.uid);
+                const docSnap = await getDoc(userDoc);
+
+                if (docSnap.exists()) {
+                    const userData = docSnap.data();
+                    document.getElementById('username').value = userData.username;
+                    document.getElementById('email').value = userData.email;
+                    document.getElementById('password').value = userData.password;
+                    // Note: Handle password separately as it should not be displayed
+                } else {
+                    console.log('No such document!');
+                    document.getElementById('error-message').textContent = 'No user data found.';
+                }
+            } else {
+                window.location.href = 'login.html'; // Redirect to login page
+            }
+        });
+    </script>
+</body>
+
+</html>
